@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>杨氏模量实验系统（三合一精简版）</title>
+    <title>杨氏模量实验系统（深色科技风）</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         window.MathJax = {
@@ -15,14 +15,20 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:"Microsoft YaHei",sans-serif;}
+        body{font-family:"Microsoft YaHei",sans-serif; color: #e2e8f0;}
 
-        /* 统一分隔样式 */
-        .section {
-            margin: 50px 0;
-            border-top: 3px solid #0ea5e9;
-            padding-top: 30px;
+        /* 全局深色背景，和第二张界面保持一致 */
+        body {
+            background: #0b1203 url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/e0aa89d62b2b4967b4d14414e89eccc3.png') center/cover no-repeat fixed;
+            padding: 12px;
+            min-height: 100vh;
         }
+        body::before {
+            content:""; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(12,22,38,0.7); z-index:-1;
+        }
+
+        /* 统一标题样式 */
         .section-title {
             text-align: center;
             font-size: 24px;
@@ -31,36 +37,84 @@
             text-shadow: 0 0 10px #5eead4;
         }
 
-        /* ============= 1. 计算器部分样式 ============= */
-        #calculator-section {
-            background:#f7f8fa;
-            padding:15px;
+        /* 通用卡片样式，和AI答疑部分一致 */
+        .card{
+            background:rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(72,187,255,0.35);
+            border-radius: 16px;
+            padding:16px;
+            margin-bottom:16px;
         }
-        #calculator-section .card{background:#fff;border-radius:12px;padding:18px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
-        #calculator-section h2{text-align:center;color:#222;margin-bottom:15px;font-size:20px;}
-        #calculator-section label{display:block;margin-bottom:6px;font-size:15px;color:#333;font-weight:500;}
-        #calculator-section input{width:100%;padding:11px 14px;border:1px solid #e1e5e9;border-radius:8px;font-size:16px;margin-bottom:10px;}
-        #calculator-section button{width:100%;padding:16px;background:#007bff;color:#fff;border:none;border-radius:10px;font-size:17px;font-weight:bold;margin:10px 0;cursor:pointer;}
-        #calculator-section #result{line-height:2.1;color:#222;font-weight:bold;padding:15px;background:#f8f9fa;border-radius:8px;white-space:pre-wrap;min-height:100px;}
-        #calculator-section canvas{width:100%;height:380px;background:#fff;border-radius:10px;display:block;margin-top:10px;}
 
-        /* ============= 2. AI答疑部分样式 ============= */
-        #ai-section {
-            position: relative;
-            color: #e2e8f0;
-            padding: 30px 20px;
-            min-height: 100vh;
-            background: #0b1203 url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/e0aa89d62b2b4967b4d14414e89eccc3.png') center / cover no-repeat fixed;
-            overflow-x: hidden;
+        /* ============= 1. 计算器部分（已改成深色科技风） ============= */
+        #calculator-section h2{
+            text-align:center;
+            color:#5eead4;
+            margin-bottom:15px;
+            font-size:20px;
         }
-        #ai-section::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(12, 22, 38, 0.7);
-            z-index: -1;
+        #calculator-section label{
+            display:block;
+            margin-bottom:6px;
+            font-size:15px;
+            color:#e2e8f0;
+            font-weight:500;
         }
+        #calculator-section input{
+            width:100%;
+            padding:11px 14px;
+            background:rgba(255,255,255,0.08);
+            border:1px solid rgba(72,187,255,0.4);
+            border-radius:8px;
+            font-size:16px;
+            margin-bottom:10px;
+            color:#e2e8f0;
+        }
+        #calculator-section input:focus {
+            outline: none;
+            border-color: #5eead4;
+        }
+        #calculator-section button{
+            width:100%;
+            padding:16px;
+            background: linear-gradient(90deg, #2563eb, #0ea5e9, #5eead4);
+            background-size: 200% 100%;
+            color:#fff;
+            border:none;
+            border-radius:10px;
+            font-size:17px;
+            font-weight:bold;
+            margin:10px 0;
+            cursor:pointer;
+            transition: 0.3s;
+        }
+        #calculator-section button:hover {
+            background-position: 100% 0;
+            transform: translateY(-2px);
+        }
+        #calculator-section #result{
+            line-height:2.1;
+            color:#e2e8f0;
+            font-weight:bold;
+            padding:15px;
+            background:rgba(0,15,30,0.45);
+            border-radius:8px;
+            white-space:pre-wrap;
+            min-height:100px;
+            border:1px solid rgba(94,234,212,0.25);
+        }
+        #calculator-section canvas{
+            width:100%;
+            height:380px;
+            background:#0b1203;
+            border-radius:10px;
+            display:block;
+            margin-top:10px;
+            border:1px solid rgba(72,187,255,0.35);
+        }
+
+        /* ============= 2. AI答疑部分样式（原代码不变，和第二张界面一致） ============= */
         #ai-section .container {
             max-width: 920px;
             margin: 0 auto;
@@ -80,16 +134,6 @@
             color: #94a3b8;
             margin-bottom: 34px;
             font-size: 15px;
-        }
-        #ai-section .card {
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(72, 187, 255, 0.35);
-            border-radius: 20px;
-            padding: 26px;
-            margin-bottom: 22px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-            transition: all 0.3s;
         }
         #ai-section .card:hover {
             border: 1px solid rgba(72, 187, 255, 0.5);
@@ -201,8 +245,8 @@
 </head>
 <body>
 
-<!-- ====================== 1. 计算器部分（原代码完全不变） ====================== -->
-<div class="section" id="calculator-section">
+<!-- ====================== 1. 计算器部分（已改成和AI部分一样的深色科技风） ====================== -->
+<div id="calculator-section">
     <div class="section-title">📊 杨氏模量实验计算器 V3.0</div>
     <h2>“光杠杆法” 杨氏模量测量实验计算系统</h2>
 
@@ -414,7 +458,7 @@ function calculate() {
         function fy(x) { return H_canvas - pad - (x - X_axis_min) / (X_axis_max - X_axis_min) * axisH; }
 
         // 网格
-        ctx.strokeStyle = '#eee';
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
         ctx.lineWidth = 1;
         for(let i=0; i<=6; i++){
             let x = pad + axisW/6*i;
@@ -426,14 +470,14 @@ function calculate() {
         }
 
         // 坐标轴
-        ctx.strokeStyle = '#333'; ctx.lineWidth=2;
+        ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth=2;
         ctx.beginPath();
         ctx.moveTo(pad, H_canvas-pad); ctx.lineTo(W-pad, H_canvas-pad);
         ctx.moveTo(pad, pad); ctx.lineTo(pad, H_canvas-pad);
         ctx.stroke();
 
         // ====================== 规整刻度 ======================
-        ctx.fillStyle = '#333';
+        ctx.fillStyle = '#e2e8f0';
         ctx.font = '14px Arial';
 
         // X轴：0 10 20 ... 100
@@ -449,31 +493,31 @@ function calculate() {
         }
 
         // ====================== 实验点 + 坐标标注 ======================
-        ctx.fillStyle = '#007bff';
+        ctx.fillStyle = '#5eead4';
         F.forEach((fi,i)=>{
             let x = fx(fi);
             let y = fy(x_mean[i]);
             ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
-            ctx.fillStyle = '#333';
+            ctx.fillStyle = '#e2e8f0';
             ctx.font = '11px Arial';
             ctx.fillText(`(${fi.toFixed(1)}, ${x_mean[i].toFixed(1)})`, x+8, y-8);
-            ctx.fillStyle = '#007bff';
+            ctx.fillStyle = '#5eead4';
         });
 
         // ====================== 拟合直线 ======================
-        ctx.strokeStyle = '#dc3545'; ctx.lineWidth=2;
+        ctx.strokeStyle = '#60a5fa'; ctx.lineWidth=2;
         ctx.beginPath();
         ctx.moveTo(fx(F_axis_min), fy(k*F_axis_min + intercept));
         ctx.lineTo(fx(F_axis_max), fy(k*F_axis_max + intercept));
         ctx.stroke();
 
         // ====================== 图上直接标注拟合方程 ======================
-        ctx.fillStyle = '#dc3545';
+        ctx.fillStyle = '#60a5fa';
         ctx.font = 'bold 15px Microsoft YaHei';
         ctx.fillText(`拟合方程：x = ${k.toFixed(2)}F + ${intercept.toFixed(2)}`, pad + 20, pad + 60);
 
         // 标签
-        ctx.fillStyle = '#222'; ctx.font='15px Microsoft YaHei';
+        ctx.fillStyle = '#e2e8f0'; ctx.font='15px Microsoft YaHei';
         ctx.fillText('受力 F (N)', W/2-25, H_canvas-25);
         ctx.save();
         ctx.translate(30, H_canvas/2); ctx.rotate(-Math.PI/2);
@@ -481,14 +525,14 @@ function calculate() {
         ctx.restore();
 
         // 图例
-        ctx.fillStyle='#007bff'; ctx.fillRect(pad+15,pad+15,10,10);
-        ctx.fillStyle='#333'; ctx.fillText('实验数据',pad+32,pad+23);
-        ctx.strokeStyle='#dc3545'; ctx.lineWidth=2;
+        ctx.fillStyle='#5eead4'; ctx.fillRect(pad+15,pad+15,10,10);
+        ctx.fillStyle='#e2e8f0'; ctx.fillText('实验数据',pad+32,pad+23);
+        ctx.strokeStyle='#60a5fa'; ctx.lineWidth=2;
         ctx.beginPath(); ctx.moveTo(pad+15,pad+40); ctx.lineTo(pad+25,pad+40); ctx.stroke();
         ctx.fillText('最小二乘拟合',pad+32,pad+42);
 
         ctx.font='bold 17px Microsoft YaHei';
-        ctx.fillStyle = '#222';
+        ctx.fillStyle = '#e2e8f0';
         ctx.fillText('F - x 关系曲线', W/2-70, 30);
 
     } catch(e) {
@@ -498,8 +542,8 @@ function calculate() {
 </script>
 </div>
 
-<!-- ====================== 2. AI答疑部分（原代码完全不变） ====================== -->
-<div class="section" id="ai-section">
+<!-- ====================== 2. AI答疑部分（原代码不变，风格和第二张界面一致） ====================== -->
+<div id="ai-section">
     <div class="section-title">💬 杨氏模量实验AI深度答疑伴侣</div>
     <div class="container">
         <div class="title">杨氏模量实验AI答疑伴侣</div>
