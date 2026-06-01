@@ -2,10 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
-    <title>杨氏模量实验 三合一完整系统</title>
-
-    <!-- 共用资源 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>杨氏模量实验系统（三合一精简版）</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         window.MathJax = {
@@ -15,9 +13,11 @@
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
     <style>
-        /* 全局分隔样式，不影响你原有内部任何样式 */
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:"Microsoft YaHei",sans-serif;}
+
+        /* 统一分隔样式 */
         .section {
             margin: 50px 0;
             border-top: 3px solid #0ea5e9;
@@ -30,39 +30,200 @@
             margin-bottom: 20px;
             text-shadow: 0 0 10px #5eead4;
         }
+
+        /* ============= 1. 计算器部分样式 ============= */
+        #calculator-section {
+            background:#f7f8fa;
+            padding:15px;
+        }
+        #calculator-section .card{background:#fff;border-radius:12px;padding:18px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+        #calculator-section h2{text-align:center;color:#222;margin-bottom:15px;font-size:20px;}
+        #calculator-section label{display:block;margin-bottom:6px;font-size:15px;color:#333;font-weight:500;}
+        #calculator-section input{width:100%;padding:11px 14px;border:1px solid #e1e5e9;border-radius:8px;font-size:16px;margin-bottom:10px;}
+        #calculator-section button{width:100%;padding:16px;background:#007bff;color:#fff;border:none;border-radius:10px;font-size:17px;font-weight:bold;margin:10px 0;cursor:pointer;}
+        #calculator-section #result{line-height:2.1;color:#222;font-weight:bold;padding:15px;background:#f8f9fa;border-radius:8px;white-space:pre-wrap;min-height:100px;}
+        #calculator-section canvas{width:100%;height:380px;background:#fff;border-radius:10px;display:block;margin-top:10px;}
+
+        /* ============= 2. AI答疑部分样式 ============= */
+        #ai-section {
+            position: relative;
+            color: #e2e8f0;
+            padding: 30px 20px;
+            min-height: 100vh;
+            background: #0b1203 url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/e0aa89d62b2b4967b4d14414e89eccc3.png') center / cover no-repeat fixed;
+            overflow-x: hidden;
+        }
+        #ai-section::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(12, 22, 38, 0.7);
+            z-index: -1;
+        }
+        #ai-section .container {
+            max-width: 920px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        #ai-section .title {
+            text-align: center;
+            font-size: 30px;
+            color: #5eead4;
+            text-shadow: 0 0 18px #22d3ee;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        #ai-section .sub {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 34px;
+            font-size: 15px;
+        }
+        #ai-section .card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(72, 187, 255, 0.35);
+            border-radius: 20px;
+            padding: 26px;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+        #ai-section .card:hover {
+            border: 1px solid rgba(72, 187, 255, 0.5);
+            box-shadow: 0 12px 36px rgba(94,234,212,0.2);
+        }
+        #ai-section .card h3 {
+            color: #60a5fa;
+            margin-bottom: 18px;
+            font-size: 19px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #ai-section textarea {
+            width: 100%;
+            height: 130px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(72, 187, 255, 0.4);
+            border-radius: 14px;
+            padding: 16px;
+            color: #e2e8f0;
+            font-size: 15px;
+            resize: none;
+            outline: none;
+            transition: 0.2s;
+        }
+        #ai-section textarea:focus {
+            border-color: #5eead4;
+            background: rgba(255,255,255,0.1);
+        }
+        #ai-section .btn {
+            width: 100%;
+            padding: 17px;
+            background: linear-gradient(90deg, #2563eb, #0ea5e9, #5eead4);
+            background-size: 200% 100%;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(14,165,233,0.35);
+        }
+        #ai-section .btn:hover {
+            background-position: 100% 0;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px rgba(94,234,212,0.35);
+        }
+        #ai-section .ans-box {
+            background: rgba(0,15,30,0.45);
+            backdrop-filter: blur(6px);
+            border-radius: 16px;
+            padding: 28px;
+            min-height: 340px;
+            max-height: 580px;
+            overflow-y: auto;
+            line-height: 1.95;
+            font-size: 15px;
+            border: 1px solid rgba(94,234,212,0.25);
+        }
+        #ai-section .ans-box p {
+            margin: 12px 0;
+            line-height: 1.8;
+            clear: both;
+        }
+        #ai-section .ans-box .MathJax,
+        #ai-section .ans-box .mathjax {
+            display: block !important;
+            margin: 15px auto !important;
+            text-align: center !important;
+            float: none !important;
+            max-width: 100% !important;
+            overflow-x: auto;
+        }
+        #ai-section .ans-box h1,#ai-section .ans-box h2,#ai-section .ans-box h3 {
+            color: #5eead4;
+            margin: 14px 0;
+            clear: both;
+        }
+        #ai-section .ans-box ul,#ai-section .ans-box ol {
+            margin-left: 24px;
+            margin: 10px 0;
+            clear: both;
+        }
+        #ai-section .ans-box strong {
+            color: #93c5fd;
+            font-weight: 600;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #5eead4; border-radius: 10px; }
+        #ai-section .diagram-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(72, 187, 255, 0.35);
+            border-radius: 20px;
+            padding: 26px;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+        #ai-section .diagram-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
 
-<!-- ====================== 1. 杨氏模量计算器（你原代码完全不变） ====================== -->
-<div class="section">
+<!-- ====================== 1. 计算器部分（原代码完全不变） ====================== -->
+<div class="section" id="calculator-section">
     <div class="section-title">📊 杨氏模量实验计算器 V3.0</div>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:#f7f8fa;font-family:"Microsoft YaHei",sans-serif;padding:15px;}
-        .card{background:#fff;border-radius:12px;padding:18px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
-        h2{text-align:center;color:#222;margin-bottom:15px;font-size:20px;}
-        label{display:block;margin-bottom:6px;font-size:15px;color:#333;font-weight:500;}
-        input{width:100%;padding:11px 14px;border:1px solid #e1e5e9;border-radius:8px;font-size:16px;margin-bottom:10px;}
-        button{width:100%;padding:16px;background:#007bff;color:#fff;border:none;border-radius:10px;font-size:17px;font-weight:bold;margin:10px 0;cursor:pointer;}
-        #result{line-height:2.1;color:#222;font-weight:bold;padding:15px;background:#f8f9fa;border-radius:8px;white-space:pre-wrap;min-height:100px;}
-        canvas{width:100%;height:380px;background:#fff;border-radius:10px;display:block;margin-top:10px;}
-    </style>
-
     <h2>“光杠杆法” 杨氏模量测量实验计算系统</h2>
+
     <div class="card">
         <label>金属丝原长 L (mm)</label>
         <input id="L" value="737.3">
+
         <label>镜尺距 H (mm)</label>
         <input id="H" value="688.0">
+
         <label>光杠杆 D (mm)</label>
         <input id="D" value="58.00">
+
         <label>重力加速度 g (m/s²)</label>
         <input id="g" value="9.8" readonly>
     </div>
+
     <div class="card">
         <label>金属丝直径零点读数 d0 (mm)</label>
         <input id="d0" value="0.000">
+
         <label>直径测量1 (mm)</label>
         <input id="d1" value="0.680">
         <label>直径测量2 (mm)</label>
@@ -74,137 +235,141 @@
         <label>直径测量5 (mm)</label>
         <input id="d5" value="0.680">
     </div>
+
     <div class="card">
         <label>砝码质量 m (kg)，逗号分隔（保留三位小数）</label>
         <input id="m_list" value="3.000,4.000,5.000,6.000,7.000,8.000,9.000,10.000">
+
         <label>加砝码刻度读数 (mm)，逗号分隔</label>
         <input id="add_list" value="17.2,19.8,22.4,24.7,26.9,29.4,31.5,34.1">
+
         <label>减砝码刻度读数 (mm)，逗号分隔</label>
         <input id="sub_list" value="17.0,19.5,22.1,24.8,27.1,29.1,31.2,33.9">
     </div>
-    <button onclick="calculate()">✅ 计算杨氏模量 + 绘制标准曲线</button>
+
+    <button onclick="calculate()">✅ 计算杨氏模量 + 绘制标准曲线</button> 
+
     <div id="result"></div>
     <canvas id="chart"></canvas>
 
-    <script>
-        // 你原来的代码 完全不动
-        function calculate() {
-            document.getElementById('result').innerText = "";
-            const canvas = document.getElementById('chart');
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-            ctx.clearRect(0,0,canvas.width,canvas.height);
+<script>
+function calculate() {
+    document.getElementById('result').innerText = "";
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
-            try {
-                const L = Number(document.getElementById('L').value);
-                const H = Number(document.getElementById('H').value);
-                const D = Number(document.getElementById('D').value);
-                const g = Number(document.getElementById('g').value);
-                const pi = 3.14159265;
+    try {
+        const L = Number(document.getElementById('L').value);
+        const H = Number(document.getElementById('H').value);
+        const D = Number(document.getElementById('D').value);
+        const g = Number(document.getElementById('g').value);
+        const pi = 3.14159265;
 
-                const d0 = Number(document.getElementById('d0').value);
-                const d_arr = [
-                    Number(document.getElementById('d1').value),
-                    Number(document.getElementById('d2').value),
-                    Number(document.getElementById('d3').value),
-                    Number(document.getElementById('d4').value),
-                    Number(document.getElementById('d5').value)
-                ];
-                const d_raw = d_arr.reduce((a,b)=>a+b,0) / d_arr.length;
-                const d_correct = d_raw - d0;
-                const d = Math.round(d_correct * 1000) / 1000;
+        const d0 = Number(document.getElementById('d0').value);
+        const d_arr = [
+            Number(document.getElementById('d1').value),
+            Number(document.getElementById('d2').value),
+            Number(document.getElementById('d3').value),
+            Number(document.getElementById('d4').value),
+            Number(document.getElementById('d5').value)
+        ];
+        const d_raw = d_arr.reduce((a,b)=>a+b,0) / d_arr.length;
+        const d_correct = d_raw - d0;
+        const d = Math.round(d_correct * 1000) / 1000;
 
-                // 直径A类不确定度
-                const n_d = d_arr.length;
-                let sum_d2 = 0;
-                d_arr.forEach(val => sum_d2 += (val - d_raw)**2);
-                const s_d = Math.sqrt(sum_d2 / (n_d - 1));
-                const uA_d = s_d / Math.sqrt(n_d);
+        // 直径A类不确定度
+        const n_d = d_arr.length;
+        let sum_d2 = 0;
+        d_arr.forEach(val => sum_d2 += (val - d_raw)**2);
+        const s_d = Math.sqrt(sum_d2 / (n_d - 1));
+        const uA_d = s_d / Math.sqrt(n_d);
 
-                // 直径B类不确定度（螺旋测微器仪器误差0.004mm）
-                const delta_ins_d = 0.004;
-                const uB_d = delta_ins_d / Math.sqrt(3);
+        // 直径B类不确定度（螺旋测微器仪器误差0.004mm）
+        const delta_ins_d = 0.004;
+        const uB_d = delta_ins_d / Math.sqrt(3);
 
-                // 直径合成不确定度
-                const u_d = Math.sqrt(uA_d**2 + uB_d**2);
+        // 直径合成不确定度
+        const u_d = Math.sqrt(uA_d**2 + uB_d**2);
 
-                const m = document.getElementById('m_list').value.split(',').map(Number).filter(n=>!isNaN(n));
-                const add = document.getElementById('add_list').value.split(',').map(Number).filter(n=>!isNaN(n));
-                const sub = document.getElementById('sub_list').value.split(',').map(Number).filter(n=>!isNaN(n));
+        const m = document.getElementById('m_list').value.split(',').map(Number).filter(n=>!isNaN(n));
+        const add = document.getElementById('add_list').value.split(',').map(Number).filter(n=>!isNaN(n));
+        const sub = document.getElementById('sub_list').value.split(',').map(Number).filter(n=>!isNaN(n));
 
-                if(m.length!==add.length || add.length!==sub.length || m.length<2){
-                    throw new Error("数据长度不一致！");
-                }
+        if(m.length!==add.length || add.length!==sub.length || m.length<2){
+            throw new Error("数据长度不一致！");
+        }
 
-                const x_mean = add.map((_,i) => (add[i]+sub[i])/2);
-                const F = m.map(mi => mi * g);
+        const x_mean = add.map((_,i) => (add[i]+sub[i])/2);
+        const F = m.map(mi => mi * g);
 
-                const n = F.length;
-                let sumF=0, sumX=0, sumFX=0, sumF2=0;
-                for(let i=0; i<n; i++){
-                    sumF += F[i];
-                    sumX += x_mean[i];
-                    sumFX += F[i] * x_mean[i];
-                    sumF2 += F[i]**2;
-                }
-                const k = (n*sumFX - sumF*sumX) / (n*sumF2 - sumF**2);
-                const intercept = (sumX/n) - k*(sumF/n);
+        const n = F.length;
+        let sumF=0, sumX=0, sumFX=0, sumF2=0;
+        for(let i=0; i<n; i++){
+            sumF += F[i];
+            sumX += x_mean[i];
+            sumFX += F[i] * x_mean[i];
+            sumF2 += F[i]**2;
+        }
+        const k = (n*sumFX - sumF*sumX) / (n*sumF2 - sumF**2);
+        const intercept = (sumX/n) - k*(sumF/n);
 
-                // 斜率不确定度
-                let S = 0;
-                for(let i=0; i<n; i++){
-                    const x_pred = k*F[i] + intercept;
-                    S += (x_mean[i] - x_pred)**2;
-                }
-                const s_x = Math.sqrt(S/(n-2));
-                const meanF = sumF/n;
-                let sumF_dev2 = 0;
-                F.forEach(f => sumF_dev2 += (f - meanF)**2);
-                const u_k = s_x / Math.sqrt(sumF_dev2);
+        // 斜率不确定度
+        let S = 0;
+        for(let i=0; i<n; i++){
+            const x_pred = k*F[i] + intercept;
+            S += (x_mean[i] - x_pred)**2;
+        }
+        const s_x = Math.sqrt(S/(n-2));
+        const meanF = sumF/n;
+        let sumF_dev2 = 0;
+        F.forEach(f => sumF_dev2 += (f - meanF)**2);
+        const u_k = s_x / Math.sqrt(sumF_dev2);
+   
+        // 杨氏模量计算
+        const E_nmm2 = (8 * L * H) / (pi * d**2 * D * k);
+        const E_gpa = E_nmm2 / 1000;
 
-                // 杨氏模量计算
-                const E_nmm2 = (8 * L * H) / (pi * d**2 * D * k);
-                const E_gpa = E_nmm2 / 1000;
 
+        //L、H、D：。单次测量，A类不确定度 = 0
+        const uA_L = 0;
+        const uA_H = 0;
+        const uA_D = 0;
 
-                //L、H、D：。单次测量，A类不确定度 = 0
-                const uA_L = 0;
-                const uA_H = 0;
-                const uA_D = 0;
+        //B类不确定度
+        const delta_LH = 0.5;
+        const uB_L = delta_LH / Math.sqrt(3);
+        const uB_H = delta_LH / Math.sqrt(3);
 
-                //B类不确定度
-                const delta_LH = 0.5;
-                const uB_L = delta_LH / Math.sqrt(3);
-                const uB_H = delta_LH / Math.sqrt(3);
+        const delta_D = 0.02;
+        const uB_D = delta_D / Math.sqrt(3);
 
-                const delta_D = 0.02;
-                const uB_D = delta_D / Math.sqrt(3);
+        //合成不确定度 u = √(uA²+uB²)
+        const u_L = Math.sqrt(uA_L**2 + uB_L**2);
+        const u_H = Math.sqrt(uA_H**2 + uB_H**2);
+        const u_D = Math.sqrt(uA_D**2 + uB_D**2);
 
-                //合成不确定度 u = √(uA²+uB²)
-                const u_L = Math.sqrt(uA_L**2 + uB_L**2);
-                const u_H = Math.sqrt(uA_H**2 + uB_H**2);
-                const u_D = Math.sqrt(uA_D**2 + uB_D**2);
+        //相对不确定度
+        const ur_L = u_L / L;
+        const ur_H = u_H / H;
+        const ur_D = u_D / D;
 
-                //相对不确定度
-                const ur_L = u_L / L;
-                const ur_H = u_H / H;
-                const ur_D = u_D / D;
+        // 杨氏模量相对不确定度 + 合成不确定度
+       
+        const ur_d = u_d / d;
+        const ur_k = u_k / k;
+        const ur_E = Math.sqrt(ur_L**2 + ur_H**2 + ur_D**2 + (2*ur_d)**2 + ur_k**2);
+        const u_E = E_gpa * ur_E;
+        const u_E_nmm2 = E_nmm2 * ur_E;
 
-                // 杨氏模量相对不确定度 + 合成不确定度
+        // 扩展不确定度 k=2
+        const U_E = (2 * u_E).toFixed(2);
+        const U_E_nmm2 = (2 * u_E_nmm2).toFixed(2);
 
-                const ur_d = u_d / d;
-                const ur_k = u_k / k;
-                const ur_E = Math.sqrt(ur_L**2 + ur_H**2 + ur_D**2 + (2*ur_d)**2 + ur_k**2);
-                const u_E = E_gpa * ur_E;
-                const u_E_nmm2 = E_nmm2 * ur_E;
-
-                // 扩展不确定度 k=2
-                const U_E = (2 * u_E).toFixed(2);
-                const U_E_nmm2 = (2 * u_E_nmm2).toFixed(2);
-
-                let res = `
+        let res = `
 -----（一）基础几何参数模块-------
 ✅ 金属丝原长 L：${L.toFixed(1)} mm
 ✅ 镜尺距 H：${H.toFixed(1)} mm
@@ -229,323 +394,179 @@
    E = （${E_gpa.toFixed(2)} ± ${U_E}） GPa
    E = （${E_nmm2.toFixed(2)} ± ${U_E_nmm2}） N/mm²
         `;
-                document.getElementById('result').innerText = res;
+        document.getElementById('result').innerText = res;
 
-                // ====================== 绘图：坐标完全对齐 ======================
-                const W = canvas.width;
-                const H_canvas = canvas.height;
-                const pad = 80;
-                const axisW = W - 2*pad;
-                const axisH = H_canvas - 2*pad;
+        // ====================== 绘图：坐标完全对齐 ======================
+        const W = canvas.width;
+        const H_canvas = canvas.height;
+        const pad = 80;
+        const axisW = W - 2*pad;
+        const axisH = H_canvas - 2*pad;
 
-                // 固定坐标轴（规整刻度：0 10 20...）
-                const F_axis_min = 0;
-                const F_axis_max = 100;
-                const X_axis_min = 10;
-                const X_axis_max = 40;
+        // 固定坐标轴（规整刻度：0 10 20...）
+        const F_axis_min = 0;
+        const F_axis_max = 100;
+        const X_axis_min = 10;
+        const X_axis_max = 40;
 
-                // 坐标映射（点位置与刻度严格对应）
-                function fx(f) { return pad + (f - F_axis_min) / (F_axis_max - F_axis_min) * axisW; }
-                function fy(x) { return H_canvas - pad - (x - X_axis_min) / (X_axis_max - X_axis_min) * axisH; }
+        // 坐标映射（点位置与刻度严格对应）
+        function fx(f) { return pad + (f - F_axis_min) / (F_axis_max - F_axis_min) * axisW; }
+        function fy(x) { return H_canvas - pad - (x - X_axis_min) / (X_axis_max - X_axis_min) * axisH; }
 
-                // 网格
-                ctx.strokeStyle = '#eee';
-                ctx.lineWidth = 1;
-                for(let i=0; i<=6; i++){
-                    let x = pad + axisW/6*i;
-                    ctx.beginPath(); ctx.moveTo(x, pad); ctx.lineTo(x, H_canvas-pad); ctx.stroke();
-                }
-                for(let i=0; i<=6; i++){
-                    let y = pad + axisH/6*i;
-                    ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke();
-                }
-
-                // 坐标轴
-                ctx.strokeStyle = '#333'; ctx.lineWidth=2;
-                ctx.beginPath();
-                ctx.moveTo(pad, H_canvas-pad); ctx.lineTo(W-pad, H_canvas-pad);
-                ctx.moveTo(pad, pad); ctx.lineTo(pad, H_canvas-pad);
-                ctx.stroke();
-
-                // ====================== 规整刻度 ======================
-                ctx.fillStyle = '#333';
-                ctx.font = '14px Arial';
-
-                // X轴：0 10 20 ... 100
-                for(let v=F_axis_min; v<=F_axis_max; v+=10){
-                    let x = fx(v);
-                    ctx.fillText(v, x-8, H_canvas-pad+22);
-                }
-
-                // Y轴：10 15 20 ... 40
-                for(let v=X_axis_min; v<=X_axis_max; v+=5){
-                    let y = fy(v);
-                    ctx.fillText(v, pad-40, y+5);
-                }
-
-                // ====================== 实验点 + 坐标标注 ======================
-                ctx.fillStyle = '#007bff';
-                F.forEach((fi,i)=>{
-                    let x = fx(fi);
-                    let y = fy(x_mean[i]);
-                    ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
-                    ctx.fillStyle = '#333';
-                    ctx.font = '11px Arial';
-                    ctx.fillText(`(${fi.toFixed(1)}, ${x_mean[i].toFixed(1)})`, x+8, y-8);
-                    ctx.fillStyle = '#007bff';
-                });
-
-                // ====================== 拟合直线 ======================
-                ctx.strokeStyle = '#dc3545'; ctx.lineWidth=2;
-                ctx.beginPath();
-                ctx.moveTo(fx(F_axis_min), fy(k*F_axis_min + intercept));
-                ctx.lineTo(fx(F_axis_max), fy(k*F_axis_max + intercept));
-                ctx.stroke();
-
-                // ====================== 图上直接标注拟合方程 ======================
-                ctx.fillStyle = '#dc3545';
-                ctx.font = 'bold 15px Microsoft YaHei';
-                ctx.fillText(`拟合方程：x = ${k.toFixed(2)}F + ${intercept.toFixed(2)}`, pad + 20, pad + 60);
-
-                // 标签
-                ctx.fillStyle = '#222'; ctx.font='15px Microsoft YaHei';
-                ctx.fillText('受力 F (N)', W/2-25, H_canvas-25);
-                ctx.save();
-                ctx.translate(30, H_canvas/2); ctx.rotate(-Math.PI/2);
-                ctx.fillText('刻度读数 x (mm)',0,0);
-                ctx.restore();
-
-                // 图例
-                ctx.fillStyle='#007bff'; ctx.fillRect(pad+15,pad+15,10,10);
-                ctx.fillStyle='#333'; ctx.fillText('实验数据',pad+32,pad+23);
-                ctx.strokeStyle='#dc3545'; ctx.lineWidth=2;
-                ctx.beginPath(); ctx.moveTo(pad+15,pad+40); ctx.lineTo(pad+25,pad+40); ctx.stroke();
-                ctx.fillText('最小二乘拟合',pad+32,pad+42);
-
-                ctx.font='bold 17px Microsoft YaHei';
-                ctx.fillStyle = '#222';
-                ctx.fillText('F - x 关系曲线', W/2-70, 30);
-
-            } catch(e) {
-                document.getElementById('result').innerText = "❌ 错误："+e.message;
-            }
+        // 网格
+        ctx.strokeStyle = '#eee';
+        ctx.lineWidth = 1;
+        for(let i=0; i<=6; i++){
+            let x = pad + axisW/6*i;
+            ctx.beginPath(); ctx.moveTo(x, pad); ctx.lineTo(x, H_canvas-pad); ctx.stroke();
         }
-    </script>
+        for(let i=0; i<=6; i++){
+            let y = pad + axisH/6*i;
+            ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke();
+        }
+
+        // 坐标轴
+        ctx.strokeStyle = '#333'; ctx.lineWidth=2;
+        ctx.beginPath();
+        ctx.moveTo(pad, H_canvas-pad); ctx.lineTo(W-pad, H_canvas-pad);
+        ctx.moveTo(pad, pad); ctx.lineTo(pad, H_canvas-pad);
+        ctx.stroke();
+
+        // ====================== 规整刻度 ======================
+        ctx.fillStyle = '#333';
+        ctx.font = '14px Arial';
+
+        // X轴：0 10 20 ... 100
+        for(let v=F_axis_min; v<=F_axis_max; v+=10){
+            let x = fx(v);
+            ctx.fillText(v, x-8, H_canvas-pad+22);
+        }
+
+        // Y轴：10 15 20 ... 40
+        for(let v=X_axis_min; v<=X_axis_max; v+=5){
+            let y = fy(v);
+            ctx.fillText(v, pad-40, y+5);
+        }
+
+        // ====================== 实验点 + 坐标标注 ======================
+        ctx.fillStyle = '#007bff';
+        F.forEach((fi,i)=>{
+            let x = fx(fi);
+            let y = fy(x_mean[i]);
+            ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#333';
+            ctx.font = '11px Arial';
+            ctx.fillText(`(${fi.toFixed(1)}, ${x_mean[i].toFixed(1)})`, x+8, y-8);
+            ctx.fillStyle = '#007bff';
+        });
+
+        // ====================== 拟合直线 ======================
+        ctx.strokeStyle = '#dc3545'; ctx.lineWidth=2;
+        ctx.beginPath();
+        ctx.moveTo(fx(F_axis_min), fy(k*F_axis_min + intercept));
+        ctx.lineTo(fx(F_axis_max), fy(k*F_axis_max + intercept));
+        ctx.stroke();
+
+        // ====================== 图上直接标注拟合方程 ======================
+        ctx.fillStyle = '#dc3545';
+        ctx.font = 'bold 15px Microsoft YaHei';
+        ctx.fillText(`拟合方程：x = ${k.toFixed(2)}F + ${intercept.toFixed(2)}`, pad + 20, pad + 60);
+
+        // 标签
+        ctx.fillStyle = '#222'; ctx.font='15px Microsoft YaHei';
+        ctx.fillText('受力 F (N)', W/2-25, H_canvas-25);
+        ctx.save();
+        ctx.translate(30, H_canvas/2); ctx.rotate(-Math.PI/2);
+        ctx.fillText('刻度读数 x (mm)',0,0);
+        ctx.restore();
+
+        // 图例
+        ctx.fillStyle='#007bff'; ctx.fillRect(pad+15,pad+15,10,10);
+        ctx.fillStyle='#333'; ctx.fillText('实验数据',pad+32,pad+23);
+        ctx.strokeStyle='#dc3545'; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.moveTo(pad+15,pad+40); ctx.lineTo(pad+25,pad+40); ctx.stroke();
+        ctx.fillText('最小二乘拟合',pad+32,pad+42);
+
+        ctx.font='bold 17px Microsoft YaHei';
+        ctx.fillStyle = '#222';
+        ctx.fillText('F - x 关系曲线', W/2-70, 30);
+
+    } catch(e) {
+        document.getElementById('result').innerText = "❌ 错误："+e.message;
+    }
+}
+</script>
 </div>
 
-<!-- ====================== 2. AI深度答疑伴侣（你原代码完全不变） ====================== -->
-<div class="section">
+<!-- ====================== 2. AI答疑部分（原代码完全不变） ====================== -->
+<div class="section" id="ai-section">
     <div class="section-title">💬 杨氏模量实验AI深度答疑伴侣</div>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif;}
-        body {
-            position: relative;
-            color: #e2e8f0;
-            padding: 30px 20px;
-            min-height: 100vh;
-            background: #0b1203 url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/e0aa89d62b2b4967b4d14414e89eccc3.png') center / cover no-repeat fixed;
-            overflow-x: hidden;
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(12, 22, 38, 0.7);
-            z-index: -1;
-        }
-        .container {
-            max-width: 920px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-        .title {
-            text-align: center;
-            font-size: 30px;
-            color: #5eead4;
-            text-shadow: 0 0 18px #22d3ee;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-        .sub {
-            text-align: center;
-            color: #94a3b8;
-            margin-bottom: 34px;
-            font-size: 15px;
-        }
-        .card {
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(72, 187, 255, 0.35);
-            border-radius: 20px;
-            padding: 26px;
-            margin-bottom: 22px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-            transition: all 0.3s;
-        }
-        .card:hover {
-            border: 1px solid rgba(72, 187, 255, 0.5);
-            box-shadow: 0 12px 36px rgba(94,234,212,0.2);
-        }
-        .card h3 {
-            color: #60a5fa;
-            margin-bottom: 18px;
-            font-size: 19px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        textarea {
-            width: 100%;
-            height: 130px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(72, 187, 255, 0.4);
-            border-radius: 14px;
-            padding: 16px;
-            color: #e2e8f0;
-            font-size: 15px;
-            resize: none;
-            outline: none;
-            transition: 0.2s;
-        }
-        textarea:focus {
-            border-color: #5eead4;
-            background: rgba(255,255,255,0.1);
-        }
-        .btn {
-            width: 100%;
-            padding: 17px;
-            background: linear-gradient(90deg, #2563eb, #0ea5e9, #5eead4);
-            background-size: 200% 100%;
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(14,165,233,0.35);
-        }
-        .btn:hover {
-            background-position: 100% 0;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 22px rgba(94,234,212,0.35);
-        }
-        .ans-box {
-            background: rgba(0,15,30,0.45);
-            backdrop-filter: blur(6px);
-            border-radius: 16px;
-            padding: 28px;
-            min-height: 340px;
-            max-height: 580px;
-            overflow-y: auto;
-            line-height: 1.95;
-            font-size: 15px;
-            border: 1px solid rgba(94,234,212,0.25);
-        }
-        .ans-box p {
-            margin: 12px 0;
-            line-height: 1.8;
-            clear: both;
-        }
-        .ans-box .MathJax,
-        .ans-box .mathjax {
-            display: block !important;
-            margin: 15px auto !important;
-            text-align: center !important;
-            float: none !important;
-            max-width: 100% !important;
-            overflow-x: auto;
-        }
-        .ans-box h1,.ans-box h2,.ans-box h3 {
-            color: #5eead4;
-            margin: 14px 0;
-            clear: both;
-        }
-        .ans-box ul,.ans-box ol {
-            margin-left: 24px;
-            margin: 10px 0;
-            clear: both;
-        }
-        .ans-box strong {
-            color: #93c5fd;
-            font-weight: 600;
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #5eead4; border-radius: 10px; }
-        .diagram-card {
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(72, 187, 255, 0.35);
-            border-radius: 20px;
-            padding: 26px;
-            margin-bottom: 22px;
-            text-align: center;
-        }
-        .diagram-card img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-    </style>
-
     <div class="container">
         <div class="title">杨氏模量实验AI答疑伴侣</div>
         <div class="sub">基于AI大模型 + 实验材料</div>
+
+        <!-- 示意图卡片移到这里：标题下方，提问卡片上方 -->
         <div class="diagram-card">
             <h3 style="color: #60a5fa; margin-bottom: 18px; font-size: 19px; text-align: left;">📐 光杠杆放大原理示意图</h3>
             <img src="https://zhanglihao-del.github.io/youngs-modulus-lab-ai-assistant/light-lever.png" alt="光杠杆放大原理示意图">
         </div>
+
         <div class="card">
             <h3>💬 你对杨氏模量实验的疑问还有啥吖~</h3>
             <textarea id="q" placeholder="我猜猜~你肯定会问：光杠杆原理、公式推导、逐差法、误差来源、仪器怎么调、实验报告怎么写等"></textarea>
             <button class="btn" onclick="ask()">🧠 轻轻敲我一下 我才回答你噢 </button>
         </div>
+
         <div class="card">
             <h3>📘 我的深度解答在下面吖~</h3>
             <div class="ans-box" id="ans">我已准备接受拷问啦，可以为你解答原理、步骤、误差、仪器、报告等全部深度问题噢～</div>
         </div>
     </div>
 
-    <script>
-        // 你原来的代码 完全不动
-        const API_KEY = "sk-929f977a6546471a90d935b7bc1d79a5";
-        const MODEL = "qwen-turbo";
-        const KNOWLEDGE = `
+<script>
+const API_KEY = "sk-929f977a6546471a90d935b7bc1d79a5";
+const MODEL = "qwen-turbo";
+
+const KNOWLEDGE = `
 # 杨氏模量实验官方说明书（完整版）
+
 ## 一、实验概述
 力作用于物体产生形变，弹性形变分纵向、切变、扭转、弯曲。
 杨氏模量E：材料抵抗拉伸形变能力，仅与材料性质有关。
 本实验采用**拉伸法+光杠杆法**测金属丝杨氏模量。
+
 ## 二、实验目的
 1. 学会拉伸法测杨氏模量；
 2. 掌握光杠杆微小位移放大原理；
-3. 学会游标卡尺、千分尺、钢卷尺、望远镜使用；
+3. 掌握游标卡尺、千分尺、钢卷尺、望远镜使用；
 4. 学会数据处理、误差分析、不确定度计算。
+
 ## 三、实验仪器
 - 杨氏模量仪（含金属丝、光杠杆、望远镜、标尺）
 - 螺旋测微器（精度0.01mm）
 - 游标卡尺（精度0.02mm）
 - 钢卷尺（精度1mm）
 - 数字拉力计、LED标尺
+
 ## 四、核心物理量定义（标准定义）
 - D：光杠杆常数，定义为光杠杆后足尖到前两足连线的垂直距离。
 - H：镜尺距，定义为光杠杆反射镜转轴到发光标尺的垂直距离。
 - Δx：标尺刻度变化量，定义为经光杠杆放大后，望远镜中观测到的标尺读数变化量。
 - θ：光杠杆偏转角，定义为金属丝伸长时，光杠杆反射镜转过的微小角度。
 - M：光杠杆放大倍数，定义为光杠杆将微小伸长量ΔL放大为Δx的倍率，M=2H/D。
+
 ## 五、核心原理
 ### 1. 杨氏模量定义
 $$E=\\frac{\\sigma}{\\varepsilon}=\\frac{F/S}{\\Delta L/L}$$
 S=πd²/4
+
 ### 2. 光杠杆放大原理
 - 几何关系：$\\Delta L = \\frac{D}{2H} \\cdot \\Delta x$
 - 放大倍数：$M = \\frac{2H}{D}$
+
 ### 3. 最终公式
 $$E=\\frac{8FLH}{\\pi d^2 D \\Delta x}$$
+
 ## 六、实验步骤
 1. 调平仪器，拉直金属丝；
 2. 调节望远镜：粗调共轴、细调清晰、消视差；
@@ -555,12 +576,14 @@ $$E=\\frac{8FLH}{\\pi d^2 D \\Delta x}$$
 6. 减砝码记录标尺；
 7. 取平均、逐差法/最小二乘法处理；
 8. 计算E并分析误差。
+
 ## 七、数据处理
 1. 直径取平均；
 2. 加减读数取平均；
 3. 逐差法：消除系统误差、提高精度；
 4. 最小二乘法：拟合F-x直线求斜率k；
 5. E=8gLH/(πd²Dk)
+
 ## 八、误差来源
 1. 金属丝直径不均、千分尺读数误差；
 2. 光杠杆未放平、镜面倾斜；
@@ -568,168 +591,103 @@ $$E=\\frac{8FLH}{\\pi d^2 D \\Delta x}$$
 4. 金属丝弯曲、未竖直；
 5. 砝码质量误差、振动影响；
 6. 温度影响。
+
+## 九、逐差法
+分组：前4、后4
+对应项相减，求平均Δx，消除线性误差
+
+## 十、最小二乘法
+拟合F=kx+b，k为劲度系数，E与k成反比
+
+## 十一、实验报告要点
+目的、原理、仪器、步骤、数据、处理、结果、误差、结论
+
+## 十二、答辩重点
+光杠杆放大、公式推导、逐差法、误差、仪器调节、数据处理
+
+# ===================== 深度物理思考体系（AI 举一反三、自由推理）=====================
+## 一、实验核心物理本质
+1. 必须保证金属丝处于**纯弹性形变范围**，胡克定律 F=kΔL 严格成立；
+2. 光杠杆的作用是**线性放大微小位移**，ΔL 与 Δx 必须保持严格线性；
+3. 所有操作规范、仪器选择、数据处理，均围绕：**保线性、消误差、提精度**。
+
+## 二、操作逻辑（为什么要/不要做某件事）
+- 预拉金属丝：消除弯曲松弛，保证纯弹性形变；
+- 加减力双向测量：消除机械回程间隙误差；
+- 禁止回旋螺母：避免破坏拉力与位移的线性关系；
+- 禁止震动：光杠杆对微位移极敏感，震动直接导致读数失真；
+- 禁止中途调望远镜：光路与放大系统固定，调节会让全部数据失效；
+- 多位置测直径：金属丝非正圆，d²对结果影响极大，必须减小系统误差；
+- 拉力不超上限：防止进入塑性形变，使公式完全失效。
+
+## 三、仪器选择逻辑（量程 + 精度匹配）
+- L、H 大尺寸 → 钢卷尺（量程足够）
+- D 中等尺寸 → 游标卡尺（精度匹配）
+- d 微小尺寸 → 螺旋测微器（高精度必需）
+- 微小形变 → 光杠杆放大（30~50倍）
+- 光路观测 → 望远镜（消视差、精准读数）
+
+## 四、误差分析逻辑
+- 系统误差：仪器倾斜、直径不均、间隙、光路偏移（可消除）
+- 随机误差：震动、读数偏差、环境干扰（可减小）
+
+## 五、数据处理逻辑
+- 逐差法 / 线性拟合：充分利用数据、消除线性系统误差、验证胡克定律
+- 简单平均：丢失线性关系，精度低，不推荐使用
 `;
-        async function ask() {
-            const q = document.getElementById("q").value.trim();
-            const ans = document.getElementById("ans");
-            if (!q) { ans.innerHTML = "⚠️ 笨蛋！你都没输入问题，我咋回答你嘞~"; return; }
-            ans.innerHTML = "🧠 我正在思考ing...";
-            const prompt = `
+
+async function ask() {
+    const q = document.getElementById("q").value.trim();
+    const ans = document.getElementById("ans");
+    if (!q) { ans.innerHTML = "⚠️ 笨蛋！你都没输入问题，我咋回答你嘞~"; return; }
+    ans.innerHTML = "🧠 我正在思考ing...";
+
+    const prompt = `
 你是大学物理实验顶级资深讲师，回答必须严格遵循标准定义：
 - 光杠杆常数指的是D（后足到前两足连线的垂直距离），不是放大倍数M。
 - 放大倍数M=2H/D，其中H是反射镜转轴到标尺的垂直距离。
 - 所有回答必须严谨、精准，和标准定义保持一致。
+
 回答规则：
 1. 学生问什么，**只精准回答什么**，直击物理本质；
 2. 所有公式必须用$$块级公式，单独一行、居中显示；
 3. 分段清晰、排版整洁、文字与公式不重叠；
 4. 语言专业、简洁、严谨；
+5. 绝不背诵固定题库，所有回答均为**实时逻辑分析**。
+
 【实验知识库】
 ${KNOWLEDGE}
+
 【学生问题】
 ${q}
 `;
-            try {
-                const res = await fetch("https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + API_KEY
-                    },
-                    body: JSON.stringify({
-                        model: MODEL,
-                        input: { prompt },
-                        parameters: { temperature: 0.1, result_format: "text" }
-                    })
-                });
-                const data = await res.json();
-                const text = data.output.text;
-                if (typeof marked !== 'undefined') {
-                    ans.innerHTML = marked.parse(text);
-                    await MathJax.typesetPromise([ans]);
-                } else {
-                    ans.innerHTML = text.replace(/\n/g, '<br>');
-                }
-            } catch (e) {
-                ans.innerHTML = "❌ 请求失败：" + e.message;
-            }
-        }
-    </script>
-</div>
 
-<!-- ====================== 3. 课前预习提问系统（你原代码完全不变） ====================== -->
-<div class="section">
-    <div class="section-title">📋 杨氏模量实验 课前预习提问系统</div>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif;}
-        body {
-            color: #e2e8f0;
-            padding: 12px;
-            min-height: 100vh;
-            background: #0b1203 url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/e0aa89d62b2b4967b4d14414e89eccc3.png') center/cover no-repeat fixed;
+    try {
+        const res = await fetch("https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + API_KEY
+            },
+            body: JSON.stringify({
+                model: MODEL,
+                input: { prompt },
+                parameters: { temperature: 0.1, result_format: "text" }
+            })
+        });
+        const data = await res.json();
+        const text = data.output.text;
+        if (typeof marked !== 'undefined') {
+            ans.innerHTML = marked.parse(text);
+            await MathJax.typesetPromise([ans]);
+        } else {
+            ans.innerHTML = text.replace(/\n/g, '<br>');
         }
-        body::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%;
-            background:rgba(12,22,38,0.7); z-index:-1;
-        }
-        .container{max-width:100%;margin:0 auto;position:relative;z-index:2;}
-        .title{text-align:center;font-size:22px;color:#5eead4;text-shadow:0 0 18px #22d3ee;margin-bottom:8px;}
-        .sub{text-align:center;color:#94a3b8;margin-bottom:20px;font-size:14px;}
-        .card{background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);border:1px solid rgba(72,187,255,0.35);border-radius:16px;padding:16px;margin-bottom:16px;}
-        .q-item{background:rgba(94,234,212,0.1);border-radius:10px;padding:12px;margin-bottom:10px;cursor:pointer;transition:0.3s;border:1px solid rgba(94,234,212,0.2);font-size:14px;}
-        .q-item:hover{background:rgba(94,234,212,0.2);border-color:#5eead4;}
-        textarea{width:100%;height:90px;background:rgba(255,255,255,0.08);border:1px solid rgba(72,187,255,0.4);border-radius:12px;padding:14px;color:#e2e8f0;font-size:15px;resize:none;outline:none;margin-bottom:14px;}
-        .btn{width:100%;padding:14px;background:linear-gradient(90deg,#2563eb,#0ea5e9,#5eead4);background-size:200% 100%;color:white;border:none;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;}
-        .btn:hover{background-position:100% 0;}
-        .rand-btn {
-            padding: 8px 14px;
-            background: #5eead4;
-            color: #0b1203;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 12px;
-            font-size:14px;
-        }
-        .ans{background:rgba(0,15,30,0.45);border-radius:12px;padding:16px;min-height:180px;max-height:350px;overflow-y:auto;line-height:1.7;border:1px solid rgba(94,234,212,0.25);font-size:14px;}
-        h3{font-size:16px;margin-bottom:12px;color:#fff;}
-    </style>
-
-    <div class="container">
-        <div class="title">杨氏模量实验 课前预习提问系统</div>
-        <div class="sub">基于大模型的自动生成课前问题系统</div>
-        <div class="card">
-            <h3>📋 课前思考题</h3>
-            <button class="rand-btn" onclick="getRandomQuestions()">🎲 随机出5道课前思考题</button>
-            <div id="questionBox"></div>
-        </div>
-        <div class="card">
-            <h3>💬 提问我叭！</h3>
-            <textarea id="q_pre" placeholder="点击上方问题即可自动填入"></textarea>
-            <button class="btn" onclick="askPre()">🧠 轻轻敲我一下呗</button>
-        </div>
-        <div class="card">
-            <h3>📘 高手准备为你解答咯</h3>
-            <div class="ans" id="ans_pre">我准备接受灵魂拷问啦～</div>
-        </div>
-    </div>
-
-    <script>
-        // 你原来的代码 完全不动
-        const questionBank = [
-            "写出本实验杨氏模量计算公式 E = 8gLH/(πd²Dk)，并说明每个物理量的含义与单位。",
-            "光杠杆放大倍数公式是什么？H 和 D 分别代表什么距离？",
-            "为什么杨氏模量实验必须用光杠杆放大法测量微小伸长量？",
-            "当金属丝受力伸长时，光杠杆镜面转动角度与标尺读数变化是什么关系？",
-            "杨氏模量 E 的两个常用单位 N/mm² 与 GPa 如何换算？",
-            "公式中的系数 8 是如何从光杠杆原理与截面积公式推导出来的？",
-            "本实验中 F-x 拟合曲线的斜率 k 的物理意义是什么？",
-            "为什么斜率 k 会直接影响杨氏模量的最终结果？",
-            "应力与应变的定义是什么？它们与杨氏模量的关系是什么？",
-            "为什么本实验要求金属必须处于弹性形变范围内？"
-        ];
-        function fillPre(text) {
-            document.getElementById("q_pre").value = text;
-        }
-        function getRandomQuestions() {
-            const box = document.getElementById("questionBox");
-            box.innerHTML = "";
-            const shuffleList = [...questionBank].sort(() => 0.5 - Math.random());
-            const selectList = shuffleList.slice(0, 5);
-            selectList.forEach((item, idx) => {
-                const div = document.createElement("div");
-                div.className = "q-item";
-                div.innerText = `${idx + 1}. ${item}`;
-                div.onclick = () => fillPre(item);
-                box.appendChild(div);
-            });
-        }
-        window.onload = getRandomQuestions;
-        async function askPre() {
-            const q = document.getElementById("q_pre").value.trim();
-            const ans = document.getElementById("ans_pre");
-            if (!q) { ans.innerHTML = "笨蛋！要先点击上面的问题 or 输入问题，我才能回答你咩～"; return; }
-            ans.innerHTML = "🧠 我正在思考ing~";
-            try {
-                const res = await fetch("/api/ask", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ prompt: q })
-                });
-                const data = await res.json();
-                const showText = data?.text || "AI 返回为空，请重试";
-                if (typeof marked !== 'undefined') {
-                    ans.innerHTML = marked.parse(showText);
-                    if (window.MathJax) await MathJax.typesetPromise([ans]);
-                } else {
-                    ans.innerHTML = showText;
-                }
-            } catch (e) {
-                ans.innerHTML = "❌ 错误：" + e.message;
-            }
-        }
-    </script>
+    } catch (e) {
+        ans.innerHTML = "❌ 请求失败：" + e.message;
+    }
+}
+</script>
 </div>
 
 </body>
