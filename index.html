@@ -349,16 +349,30 @@
 <!-- ========== 新增：页面总标题（导航栏上方） ========== -->
 <div class="main-title">杨氏模量实验教学辅助系统</div>
 
-<!-- ========== 顶部导航栏 ========== -->
+<!-- ========== 顶部导航栏 已修改顺序：预习 → 数据处理 → AI答疑 ========== -->
 <div class="nav-wrap">
-    <div class="nav-item active" data-page="calc">光杠杆法数据处理系统</div>
+    <div class="nav-item active" data-page="pre">课前预习提问系统</div>
+    <div class="nav-item" data-page="calc">光杠杆法数据处理系统</div>
     <div class="nav-item" data-page="ai">AI深度答疑伴侣</div>
-    <div class="nav-item" data-page="pre">课前预习提问系统</div>
 </div>
 
-<!-- ========== 三个内容页面，用page-box包裹 ========== -->
-<!-- 页面1：数据处理计算器 -->
-<div id="calc" class="page-box active">
+<!-- ========== 三个内容页面（顺序不变，只改导航显示逻辑） ========== -->
+<!-- 页面1：课前预习出题 -->
+<div id="pre" class="page-box active">
+<div id="pre-question-section">
+    <div class="section-title">杨氏模量实验-课前预习提问系统</div>
+    <div class="sub">基于大模型+仪器技术文档自动生成问题系统</div>
+
+    <div class="card">
+        <h3>📋 课前预习思考题</h3>
+        <button class="rand-btn" onclick="getRandomQuestions()">🎲 自动随机生成5道题</button>
+        <div id="questionBox"></div>
+    </div>
+</div>
+</div>
+
+<!-- 页面2：数据处理计算器 -->
+<div id="calc" class="page-box">
 <div id="calculator-section">
     <div class="section-title"> “光杠杆法” 杨氏模量实验数据处理系统</div>
     
@@ -410,7 +424,7 @@
 </div>
 </div>
 
-<!-- 页面2：AI答疑 -->
+<!-- 页面3：AI答疑 -->
 <div id="ai" class="page-box">
 <div id="ai-section">
     <div class="section-title">杨氏模量实验AI深度答疑伴侣</div>
@@ -436,22 +450,8 @@
 </div>
 </div>
 
-<!-- 页面3：课前预习出题 -->
-<div id="pre" class="page-box">
-<div id="pre-question-section">
-    <div class="section-title">杨氏模量实验-课前预习提问系统</div>
-    <div class="sub">基于大模型+仪器技术文档自动生成问题系统</div>
-
-    <div class="card">
-        <h3>📋 课前预习思考题</h3>
-        <button class="rand-btn" onclick="getRandomQuestions()">🎲 自动随机生成5道题</button>
-        <div id="questionBox"></div>
-    </div>
-</div>
-</div>
-
 <script>
-// ========== 导航切换JS（新增） ==========
+// ========== 导航切换JS（完全不用动） ==========
 const navItems = document.querySelectorAll('.nav-item');
 const pageBoxs = document.querySelectorAll('.page-box');
 navItems.forEach(item=>{
