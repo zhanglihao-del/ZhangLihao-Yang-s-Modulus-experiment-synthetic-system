@@ -17,7 +17,7 @@
         *{margin:0;padding:0;box-sizing:border-box;}
         body{font-family:"Microsoft YaHei",sans-serif; color: #e2e8f0;}
 
-        /* 全局深色背景，和第二张界面保持一致 */
+        /* 全局深色背景 */
         body {
             background: #0b1203 url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/e0aa89d62b2b4967b4d14414e89eccc3.png') center/cover no-repeat fixed;
             padding: 12px;
@@ -26,6 +26,53 @@
         body::before {
             content:""; position:fixed; top:0; left:0; width:100%; height:100%;
             background:rgba(12,22,38,0.7); z-index:-1;
+        }
+
+        /* ========== 新增：页面总标题样式 ========== */
+        .main-title{
+            text-align:center;
+            font-size:30px;
+            color:#5eead4;
+            text-shadow:0 0 12px #5eead4;
+            margin-bottom:16px;
+            font-weight:bold;
+        }
+
+        /* ========== 新增顶部导航栏样式 ========== */
+        .nav-wrap{
+            display:flex;
+            gap:6px;
+            background:rgba(255,255,255,0.06);
+            border-radius:12px;
+            padding:8px;
+            margin-bottom:20px;
+            border:1px solid rgba(72,187,255,0.3);
+        }
+        .nav-item{
+            flex:1;
+            text-align:center;
+            padding:12px 0;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:16px;
+            font-weight:bold;
+            transition:0.3s;
+        }
+        .nav-item.active{
+            background:linear-gradient(90deg,#2563eb,#0ea5e9,#5eead4);
+            color:#fff;
+            box-shadow:0 0 12px rgba(94,234,212,0.3);
+        }
+        .nav-item:not(.active):hover{
+            background:rgba(255,255,255,0.12);
+            color:#5eead4;
+        }
+        /* 内容区块默认全部隐藏，active才显示 */
+        .page-box{
+            display:none;
+        }
+        .page-box.active{
+            display:block;
         }
 
         /* 统一标题样式 */
@@ -37,7 +84,7 @@
             text-shadow: 0 0 10px #5eead4;
         }
 
-        /* 通用卡片样式，和AI答疑部分一致 */
+        /* 通用卡片样式 */
         .card{
             background:rgba(255,255,255,0.08);
             backdrop-filter: blur(10px);
@@ -47,7 +94,7 @@
             margin-bottom:16px;
         }
 
-        /* ============= 1. 计算器部分（已改成深色科技风） ============= */
+        /* ============= 1. 计算器部分样式（原样保留） ============= */
         #calculator-section h2{
             text-align:center;
             color:#5eead4;
@@ -114,7 +161,7 @@
             border:1px solid rgba(72,187,255,0.35);
         }
 
-        /* ============= 2. AI答疑部分样式（原代码不变，和第二张界面一致） ============= */
+        /* ============= 2. AI答疑部分样式（原样保留） ============= */
         #ai-section .container {
             max-width: 920px;
             margin: 0 auto;
@@ -242,7 +289,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* ============= 3. 预习题目抽取系统（已改成深色科技风） ============= */
+        /* ============= 3. 预习题目抽取系统样式（原样保留） ============= */
         #pre-question-section .title{
             text-align:center;
             font-size:24px;
@@ -299,8 +346,19 @@
     </style>
 </head>
 <body>
+<!-- ========== 新增：页面总标题（导航栏上方） ========== -->
+<div class="main-title">杨氏模量实验教学辅助系统</div>
 
-<!-- ====================== 1. 计算器部分（已改成和AI部分一样的深色科技风） ====================== -->
+<!-- ========== 顶部导航栏 ========== -->
+<div class="nav-wrap">
+    <div class="nav-item active" data-page="calc">光杠杆法数据处理系统</div>
+    <div class="nav-item" data-page="ai">AI深度答疑伴侣</div>
+    <div class="nav-item" data-page="pre">课前预习提问系统</div>
+</div>
+
+<!-- ========== 三个内容页面，用page-box包裹 ========== -->
+<!-- 页面1：数据处理计算器 -->
+<div id="calc" class="page-box active">
 <div id="calculator-section">
     <div class="section-title"> “光杠杆法” 杨氏模量实验数据处理系统</div>
     
@@ -349,8 +407,66 @@
 
     <div id="result"></div>
     <canvas id="chart"></canvas>
+</div>
+</div>
+
+<!-- 页面2：AI答疑 -->
+<div id="ai" class="page-box">
+<div id="ai-section">
+    <div class="section-title">杨氏模量实验AI深度答疑伴侣</div>
+    <div class="container">
+        <div class="sub">基于AI大模型 + 仪器实验说明材料</div>
+
+        <div class="diagram-card">
+            <h3 style="color: #60a5fa; margin-bottom: 18px; font-size: 19px; text-align: left;">📐 光杠杆放大原理示意图</h3>
+            <img src="https://zhanglihao-del.github.io/youngs-modulus-lab-ai-assistant/light-lever.png" alt="光杠杆放大原理示意图">
+        </div>
+
+        <div class="card">
+            <h3>💬 你对杨氏模量实验的疑问还有啥吖~</h3>
+            <textarea id="q" placeholder="我猜猜~你肯定会问：光杠杆原理、公式推导、逐差法、误差来源、仪器怎么调、实验报告怎么写等"></textarea>
+            <button class="btn" onclick="ask()">🧠 轻轻敲我一下 我才回答你噢 </button>
+        </div>
+
+        <div class="card">
+            <h3>📘 我的深度解答在下面吖~</h3>
+            <div class="ans-box" id="ans">我已准备接受拷问啦，可以为你解答原理、步骤、误差、仪器、报告等全部深度问题噢～</div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 页面3：课前预习出题 -->
+<div id="pre" class="page-box">
+<div id="pre-question-section">
+    <div class="section-title">杨氏模量实验-课前预习提问系统</div>
+    <div class="sub">基于大模型+仪器技术文档自动生成问题系统</div>
+
+    <div class="card">
+        <h3>📋 课前预习思考题</h3>
+        <button class="rand-btn" onclick="getRandomQuestions()">🎲 自动随机生成5道题</button>
+        <div id="questionBox"></div>
+    </div>
+</div>
+</div>
 
 <script>
+// ========== 导航切换JS（新增） ==========
+const navItems = document.querySelectorAll('.nav-item');
+const pageBoxs = document.querySelectorAll('.page-box');
+navItems.forEach(item=>{
+    item.onclick = function(){
+        // 清空所有激活
+        navItems.forEach(nav=>nav.classList.remove('active'));
+        pageBoxs.forEach(page=>page.classList.remove('active'));
+        // 当前选中激活
+        this.classList.add('active');
+        const targetId = this.getAttribute('data-page');
+        document.getElementById(targetId).classList.add('active');
+    }
+})
+
+// ========== 原计算器JS（原样不动） ==========
 function calculate() {
     document.getElementById('result').innerText = "";
     const canvas = document.getElementById('chart');
@@ -593,34 +709,8 @@ function calculate() {
         document.getElementById('result').innerText = "❌ 错误："+e.message;
     }
 }
-</script>
-</div>
 
-<!-- ====================== 2. AI答疑部分（原代码不变，风格和第二张界面一致） ====================== -->
-<div id="ai-section">
-    <div class="section-title">杨氏模量实验AI深度答疑伴侣</div>
-    <div class="container">
-        <div class="sub">基于AI大模型 + 仪器实验说明材料</div>
-
-        <!-- 示意图卡片移到这里：标题下方，提问卡片上方 -->
-        <div class="diagram-card">
-            <h3 style="color: #60a5fa; margin-bottom: 18px; font-size: 19px; text-align: left;">📐 光杠杆放大原理示意图</h3>
-            <img src="https://zhanglihao-del.github.io/youngs-modulus-lab-ai-assistant/light-lever.png" alt="光杠杆放大原理示意图">
-        </div>
-
-        <div class="card">
-            <h3>💬 你对杨氏模量实验的疑问还有啥吖~</h3>
-            <textarea id="q" placeholder="我猜猜~你肯定会问：光杠杆原理、公式推导、逐差法、误差来源、仪器怎么调、实验报告怎么写等"></textarea>
-            <button class="btn" onclick="ask()">🧠 轻轻敲我一下 我才回答你噢 </button>
-        </div>
-
-        <div class="card">
-            <h3>📘 我的深度解答在下面吖~</h3>
-            <div class="ans-box" id="ans">我已准备接受拷问啦，可以为你解答原理、步骤、误差、仪器、报告等全部深度问题噢～</div>
-        </div>
-    </div>
-
-<script>
+// ========== AI答疑JS（原样不动） ==========
 const API_KEY = "sk-929f977a6546471a90d935b7bc1d79a5";
 const MODEL = "qwen-turbo";
 
@@ -784,25 +874,9 @@ ${q}
         ans.innerHTML = "❌ 请求失败：" + e.message;
     }
 }
-</script>
-</div>
 
-<!-- ====================== 3. 预习题目抽取系统（已改成深色科技风） ====================== -->
-<div id="pre-question-section">
-    <div class="section-title">杨氏模量实验-课前预习提问系统</div>
-    <div class="sub">基于大模型+仪器技术文档自动生成问题系统</div>
-
-    <div class="card">
-        <h3>📋 课前预习思考题</h3>
-        <button class="rand-btn" onclick="getRandomQuestions()">🎲 自动随机生成5道题</button>
-        <div id="questionBox"></div>
-    </div>
-</div>
-
-<script>
-    // 完整题库（完全对齐实验要求，100道高质量题目）
-    const questionBank = [
-        // ========== 一、基础公式、力学原理 ==========
+// ========== 预习出题JS（原样不动） ==========
+const questionBank = [
         "写出本实验杨氏模量计算公式 E = 8gLH/(πd²Dk)，并逐一说明式中每个物理量的名称、测量工具与标准单位。",
         "推导光杠杆放大倍数公式，并解释放大倍数与光杠杆臂长D、镜面到标尺距离H的关系。",
         "杨氏模量E的物理意义是什么？它反映了固体材料的何种力学性质？",
@@ -811,8 +885,6 @@ ${q}
         "结合金属丝横截面积公式与光杠杆原理，分步推导公式中系数8的由来。",
         "光杠杆镜面发生微小偏转θ角时，标尺读数偏移量Δn与偏转角存在怎样的近似关系？该近似成立的条件是什么？",
         "实验为何必须保证金属丝始终处于弹性形变区间？若超出弹性极限会出现什么现象？",
-
-        // ========== 二、数据处理：逐差法、线性拟合、不确定度 ==========
         "本实验测量标尺读数为何优先使用逐差法处理数据？逐差法相比直接求平均有哪些优势？",
         "简述逐差法的使用前提，若测量6组等间隔载荷数据，如何分组进行逐差计算？",
         "实验中以载荷F为横坐标、标尺读数n为纵坐标做线性拟合，写出拟合斜率k的表达式，并说明其物理含义。",
@@ -824,8 +896,6 @@ ${q}
         "分析金属丝直径d的测量误差，为何对最终杨氏模量结果影响最大？",
         "扩展不确定度U与合成标准不确定度u_c的关系是什么？取包含因子k=2时代表什么置信概率？",
         "简述用最小二乘法进行一元线性回归的数据处理完整步骤。",
-
-        // ========== 三、仪器结构、技术参数（取自仪器技术文档） ==========
         "整套杨氏模量测定仪由哪几大核心部件组成？分别说明各部件的作用。",
         "简述光杠杆组件的内部结构，包含镜面、前足、后足三部分各自的安装要求与功能。",
         "根据仪器技术参数，说明本装置配套望远镜的放大倍率、有效观测视场范围。",
@@ -836,8 +906,6 @@ ${q}
         "杨氏模量底座采用水平调节螺钉，说明底座调平的技术要求及判断标准。",
         "望远镜镜筒的俯仰调节机构、左右微调机构，在技术文档中规定的调节范围是多少？",
         "仪器支架、夹头组件的材质是什么？金属丝上下夹头的锁紧结构原理是什么？",
-
-        // ========== 四、标准操作规程（仪器文档规范步骤） ==========
         "按照仪器技术规程，简述杨氏模量实验整机安装与调试的完整流程。",
         "依据设备操作规范，说明望远镜与标尺的同轴等高调节步骤与判定标准。",
         "光杠杆安装的官方规范：后足、前足分别放置位置，以及镜面垂直度调节要求。",
@@ -846,8 +914,6 @@ ${q}
         "实验开机/使用前，依据设备规范需要做哪些预检项目？",
         "实验结束后的仪器归位、清洁、收纳，按照技术文档有哪些硬性要求？",
         "更换待测金属丝时，遵循设备规程的拆装步骤是什么？如何避免夹头划伤金属丝？",
-
-        // ========== 五、仪器故障排查、异常现象（维修/运维文档内容） ==========
         "依据仪器故障手册：望远镜视野内完全看不到标尺像，列举3种官方排查方案。",
         "加载砝码后标尺读数持续漂移、无法稳定，结合设备结构分析故障点与处理方法。",
         "光杠杆镜面松动、偏转卡顿，属于仪器常见故障，说明危害及标准紧固维修方法。",
@@ -856,16 +922,12 @@ ${q}
         "望远镜调焦旋钮失灵、镜筒无法伸缩，简述简易排查与报修条件。",
         "标尺刻度模糊、反光异常，按照设备维护要求如何处理？",
         "同一载荷下多次读数重复性差，从仪器机械结构角度分析主要故障原因。",
-
-        // ========== 六、仪器标定、维护与保养（设备维保文档） ==========
         "根据仪器维保手册，说明杨氏模量装置的日常保养项目及周期。",
         "光杠杆臂长D、标尺零点、望远镜光路，仪器多久需要进行一次整机标定？",
         "金属丝属于易损件，维保文档中规定的更换判定标准是什么？",
         "设备长期闲置存放，按照技术要求需要做哪些防护措施？",
         "螺旋测微器零点偏移属于仪器系统误差，依据规范多久校验一次零点？",
         "仪器金属部件防锈、光学镜片防污的官方维护要求是什么？禁止哪些操作？",
-
-        // ========== 七、综合拓展、误差分析、深度思考 ==========
         "增减砝码时，要求轻拿轻放且等待示数稳定，结合仪器结构分析该操作的原因。",
         "光杠杆装置安装时，为何技术规范要求镜面垂直于水平面、标尺保持竖直？",
         "使用螺旋测微器测量金属丝直径时，如何读取初读数（零点误差）？零点误差为正、负时如何修正测量值？",
@@ -880,36 +942,28 @@ ${q}
         "结合不确定度与仪器精度，说明本实验中哪些部件/物理量需要优先保证测量精度。"
     ];
 
-    // 点击题目复制到剪贴板（可选功能）
     function copyQuestion(text) {
         navigator.clipboard.writeText(text).then(() => {
             alert("题目已复制到剪贴板！");
         });
     }
 
-    // 随机出题函数
     function getRandomQuestions() {
         const box = document.getElementById("questionBox");
         box.innerHTML = "";
-        // 数组随机洗牌
         const shuffleList = [...questionBank].sort(() => 0.5 - Math.random());
-        // 选取前5道题目
         const selectList = shuffleList.slice(0, 5);
 
         selectList.forEach((item, idx) => {
             const div = document.createElement("div");
             div.className = "q-item";
             div.innerText = `${idx + 1}. ${item}`;
-            // 点击题目可复制，方便粘贴到AI答疑
             div.onclick = () => copyQuestion(item);
             box.appendChild(div);
         });
     }
 
-    // 页面加载自动生成题目
     window.onload = getRandomQuestions;
 </script>
-</div>
-
 </body>
 </html>
