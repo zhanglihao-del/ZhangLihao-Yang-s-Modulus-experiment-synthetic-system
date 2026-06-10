@@ -94,6 +94,94 @@
             margin-bottom:16px;
         }
 
+        /* ============= 新增：提问反馈模块样式 ============= */
+        .feedback-card {
+            background:rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(72,187,255,0.35);
+            border-radius: 16px;
+            padding:16px;
+            margin-bottom:16px;
+        }
+        .feedback-card h3 {
+            color: #60a5fa;
+            margin-bottom: 12px;
+            font-size:18px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .feedback-card textarea {
+            width: 100%;
+            height: 100px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(72, 187, 255, 0.4);
+            border-radius: 10px;
+            padding: 12px;
+            color: #e2e8f0;
+            font-size: 15px;
+            resize: none;
+            outline: none;
+            margin-bottom: 12px;
+        }
+        .feedback-card textarea:focus {
+            border-color: #5eead4;
+            background: rgba(255,255,255,0.1);
+        }
+        .feedback-card .submit-btn {
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #2563eb, #0ea5e9, #5eead4);
+            background-size: 200% 100%;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size:15px;
+            transition: background 0.3s ease;
+        }
+        .feedback-card .submit-btn:hover {
+            background-position: 100% 0;
+            transform: translateY(-2px);
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #1e293b;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #5eead4;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            color: #e2e8f0;
+        }
+        .modal-content p {
+            margin: 15px 0;
+            font-size: 16px;
+        }
+        .modal-content button {
+            padding: 8px 20px;
+            background: linear-gradient(90deg, #2563eb, #0ea5e9, #5eead4);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
         /* ============= 1. 计算器部分样式（原样保留） ============= */
         #calculator-section h2{
             text-align:center;
@@ -351,7 +439,7 @@
 
 <!-- ========== 顶部导航栏 已修改顺序：预习 → 数据处理 → AI答疑 ========== -->
 <div class="nav-wrap">
-    <div class="nav-item active" data-page="pre">课前预习提问系统</div>
+    <div class="nav-item active" data-page="pre">思考题创编反馈系统</div>
     <div class="nav-item" data-page="calc">光杠杆法数据处理系统</div>
     <div class="nav-item" data-page="ai">AI深度答疑伴侣</div>
 </div>
@@ -360,13 +448,20 @@
 <!-- 页面1：课前预习出题 -->
 <div id="pre" class="page-box active">
 <div id="pre-question-section">
-    <div class="section-title">杨氏模量实验-课前预习提问系统</div>
+    <div class="section-title">杨氏模量实验-思考题创编反馈系统</div>
     <div class="sub">基于大模型+仪器技术文档自动生成问题系统</div>
 
     <div class="card">
         <h3>📋 课前预习思考题</h3>
         <button class="rand-btn" onclick="getRandomQuestions()">🎲 自动随机生成5道题</button>
         <div id="questionBox"></div>
+    </div>
+
+    <!-- 提问反馈模块（已移到下方） -->
+    <div class="feedback-card">
+        <h3>📝 疑惑or卡壳反馈区</h3>
+        <textarea id="feedbackInput" placeholder="在这里输入你预习中卡壳的地方、疑惑或问题，提交后老师会看到哦~"></textarea>
+        <button class="submit-btn" onclick="submitFeedback()">📤 提交我的疑惑/卡壳点</button>
     </div>
 </div>
 </div>
@@ -450,6 +545,14 @@
 </div>
 </div>
 
+<!-- 提交成功弹窗 -->
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <p>✅ 提交成功！你的疑惑已经反馈给老师啦~</p>
+        <button onclick="closeModal()">确定</button>
+    </div>
+</div>
+
 <script>
 // ========== 导航切换JS（完全不用动） ==========
 const navItems = document.querySelectorAll('.nav-item');
@@ -465,6 +568,23 @@ navItems.forEach(item=>{
         document.getElementById(targetId).classList.add('active');
     }
 })
+
+// ========== 新增：提交反馈函数 ==========
+function submitFeedback() {
+    const input = document.getElementById('feedbackInput');
+    if (input.value.trim() === "") {
+        alert("请输入你的疑惑后再提交哦~");
+        return;
+    }
+    // 这里可以后续对接后端，现在只做弹窗提示
+    document.getElementById('successModal').style.display = "block";
+    // 清空输入框
+    input.value = "";
+}
+
+function closeModal() {
+    document.getElementById('successModal').style.display = "none";
+}
 
 // ========== 原计算器JS（原样不动） ==========
 function calculate() {
