@@ -576,7 +576,7 @@ function calculate() {
         
         // =========【修复核心：独立预处理科学计数字符串】=========
         const E_Pa = E_nmm2 * 1e6;
-        const sciRaw = E_Pa.toExponential(4);
+        const sciRaw = E_Pa.toExponential(2);
         const sciStr = sciRaw.replace('e+','×10^');
         // =======================================================
 
