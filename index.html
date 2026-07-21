@@ -573,6 +573,12 @@ function calculate() {
         // 杨氏模量计算
         const E_nmm2 = (8 * L * H) / (pi * d**2 * D * k);
         const E_gpa = E_nmm2 / 1000;
+        
+        // =========【修复核心：独立预处理科学计数字符串】=========
+        const E_Pa = E_nmm2 * 1e6;
+        const sciRaw = E_Pa.toExponential(3);
+        const sciStr = sciRaw.replace('e+','×10^');
+        // =======================================================
 
 
         //L、H、D：单次测量，A类不确定度 = 0
@@ -633,7 +639,7 @@ function calculate() {
 
 -----（四）杨氏模量与不确定度模块----
 
-✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm²  = ${(E_nmm2 * 1e6).toExponential(3).replace('e+','×10^')} N/m²
+✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm²  = ${sciStr} N/m²
 ✅ 合成标准不确定度 u(E)：${u_E.toFixed(2)} GPa
 
 -----（五）最终结果模块------------
