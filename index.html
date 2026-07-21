@@ -612,25 +612,33 @@ function calculate() {
 
         let res = `
 -----（一）基础几何参数模块-------
+
 ✅ 金属丝原长 L：${L.toFixed(1)} mm
 ✅ 镜尺距 H：${H.toFixed(1)} mm
 ✅ 光杠杆常数 D：${D.toFixed(2)} mm
 ✅ 直径零点读数 d0：${d0.toFixed(3)} mm
 ✅ 直径测量平均值：${d_raw.toFixed(3)} mm
 ✅ 修正后直径 d：${d.toFixed(3)} mm
+
 -----（二）直径不确定度模块--------
+
 📏 直径A类不确定度 uA(d)：${uA_d.toFixed(4)} mm
 📏 直径B类不确定度 uB(d)：${uB_d.toFixed(4)} mm
 📏 直径合成不确定度 u(d)：${u_d.toFixed(4)} mm
+
 -----（三）拟合参数模块-------------
+
 ✅ 最小二乘法斜率 k：${k.toFixed(6)} mm/N
 ✅ 斜率不确定度 u(k)：${u_k.toFixed(6)} mm/N
-✅ 截距 b：${intercept.toFixed(3)} mm
+
 -----（四）杨氏模量与不确定度模块----
+
 ✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm² ≈ ${E_gpa.toFixed(2)} GPa
 ✅ 合成标准不确定度 u(E)：${u_E.toFixed(2)} GPa
 ✅ 扩展不确定度 U（k=2）：${U_E} GPa
+
 -----（五）最终结果模块------------
+
 🎯 最终实验结果：
    E = （${E_gpa.toFixed(2)} ± ${U_E}） GPa
    E = （${E_nmm2.toFixed(2)} ± ${U_E_nmm2}） N/mm²
