@@ -493,8 +493,13 @@ navItems.forEach(item=>{
     }
 })
 
-// ========== 原计算器JS（原样不动，仅修改输出字符串补充r、uA_k、uB_k展示） ==========
+// ========== 原计算器JS（原样不动，仅新增科学计数格式化函数、修正U_E_Pa格式化） ==========
 function calculate() {
+    // 通用科学计数格式化：把e+替换成×10^
+    function formatSci(num, precision=2){
+        return num.toExponential(precision).replace('e+','×10^');
+    }
+
     document.getElementById('result').innerText = "";
     const canvas = document.getElementById('chart');
     const ctx = canvas.getContext('2d');
@@ -621,8 +626,7 @@ function calculate() {
         
         // =========【修复核心：独立预处理科学计数字符串】=========
         const E_Pa = E_nmm2 * 1e6;
-        const sciRaw = E_Pa.toExponential(2);
-        const sciStr = sciRaw.replace('e+','×10^');
+        const sciStr = formatSci(E_Pa,2);
         // =======================================================
 
 
@@ -660,8 +664,9 @@ function calculate() {
         // 扩展不确定度 k=2
         const U_E = (2 * u_E).toFixed(2);
         const U_E_nmm2 = (2 * u_E_nmm2).toFixed(2);
+        const U_E_Pa = formatSci(2 * u_E_Pa,2);
 
-        // =====================【重点修改：输出字符串补充讲义全部参数】=====================
+        // =====================【重点修改：输出字符串补充讲义全部参数、新增N/m²扩展不确定度结果】=====================
         let res = `
 -----（一）基础几何参数模块-------
 
@@ -697,6 +702,7 @@ function calculate() {
 🎯 最终实验结果（包含因子k=2）：
    E = （${E_gpa.toFixed(2)} ± ${U_E}） GPa
    E = （${E_nmm2.toFixed(2)} ± ${U_E_nmm2}） N/mm²
+   E = （${sciStr} ± ${U_E_Pa}） N/m²
         `;
         document.getElementById('result').innerText = res;
 
@@ -1039,10 +1045,10 @@ const questionBank = [
         "螺旋测微器测量时，为何规程禁止过度旋转棘轮？会造成什么后果？",
         "更换不同粗细的同种金属丝，在相同载荷下，伸长量和杨氏模量会如何变化？",
         "加载和卸载过程中，同一载荷对应的标尺读数不一致（滞后现象），结合仪器与材料特性分析原因。",
-        "若抬高光杠杆的支点高度，在其他条件不变时，光杠杆放大倍数如何变化？杨氏模量测量结果是否改变？",
+        "若抬高光杠杆的支点高度，其他条件不变，光杠杆放大倍数如何变化？杨氏模量测量结果是否改变？",
         "假设实验中H测量偏大，结合公式分析最终计算出的杨氏模量E会偏大还是偏小？",
         "比较光杠杆法、千分表法测量微小形变，结合仪器结构说明两者优缺点。",
-        "同一根金属丝，在不同温度下杨氏模量是否会改变？结合材料特性简述原因。",
+        "同一根金属丝在不同温度下杨氏模量是否会改变？结合材料特性简述原因。",
         "为什么测量金属丝原长L时，不需要像测直径一样多次多点测量？",
         "结合不确定度与仪器精度，说明本实验中哪些部件/物理量需要优先保证测量精度。"
     ];
@@ -1072,3 +1078,4 @@ const questionBank = [
 </script>
 </body>
 </html>
+
