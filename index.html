@@ -493,7 +493,7 @@ navItems.forEach(item=>{
     }
 })
 
-// ========== 原计算器JS（原样不动） ==========
+// ========== 原计算器JS（原样不动，仅修改输出字符串补充r、uA_k、uB_k展示） ==========
 function calculate() {
     document.getElementById('result').innerText = "";
     const canvas = document.getElementById('chart');
@@ -531,11 +531,12 @@ function calculate() {
 
         // 直径B类不确定度
         const delta_ins_d = 0.004;
-        const uB_d = delta_ins_d / Math.sqrt(3);
+        const uB_d = delta_ins_d / 3;      //由const uB_d = delta_ins_d / Math.sqrt(3);  改为 const uB_d = delta_ins_d / 3;
 
         // 直径合成不确定度
         const u_d = Math.sqrt(uA_d**2 + uB_d**2);
-
+        
+        // 
         const m = document.getElementById('m_list').value.split(',').map(Number).filter(n=>!isNaN(n));
         const add = document.getElementById('add_list').value.split(',').map(Number).filter(n=>!isNaN(n));
         const sub = document.getElementById('sub_list').value.split(',').map(Number).filter(n=>!isNaN(n));
@@ -544,32 +545,76 @@ function calculate() {
             throw new Error("数据长度不一致！");
         }
 
+        // 遍历add数组，i为数组下标；对每一组，取同侧加、减载荷形变量的平均值，得到平均伸长量x_mean
+        // 物理意义：加载、卸载同一砝码得到两个形变，取平均抵消迟滞误差，得到更准确的伸长量
         const x_mean = add.map((_,i) => (add[i]+sub[i])/2);
+        // 每个质量mi乘以重力加速度g，得到对应拉力F=mg，构造拉力数组
         const F = m.map(mi => mi * g);
 
+        //获得数据点总组数n
         const n = F.length;
+        // 初始化最小二乘需要的4个累加变量：拉力总和、形变总和、F*x乘积总和、F平方总和
         let sumF=0, sumX=0, sumFX=0, sumF2=0;
+        // 遍历所有测点，累加各项求和
         for(let i=0; i<n; i++){
-            sumF += F[i];
-            sumX += x_mean[i];
-            sumFX += F[i] * x_mean[i];
-            sumF2 += F[i]**2;
+            sumF += F[i];                  // ΣF：所有拉力相加
+            sumX += x_mean[i];             // Σx：所有平均伸长量相加
+            sumFX += F[i] * x_mean[i];     // ΣFx：拉力、伸长量乘积求和
+            sumF2 += F[i]**2;              // ΣF²：拉力的平方求和
         }
+
+        //最小二乘拟合 k 斜率、intercept截距
+        // 最小二乘法斜率公式：k = (nΣFx - ΣF·Σx) / (nΣF²-(ΣF)²)，对应F=kx+b里的斜率k
         const k = (n*sumFX - sumF*sumX) / (n*sumF2 - sumF**2);
+        // 截距b = x̄ - k·F̄；x̄是伸长量平均值，F̄是拉力平均值，得到拟合直线纵轴截距intercept
         const intercept = (sumX/n) - k*(sumF/n);
 
-        // 斜率不确定度
+        //========== 1. 残差法求斜率A类不确定度 uA_k ==========
         let S = 0;
         for(let i=0; i<n; i++){
+            // 根据拟合直线算出理论预测值 x̂ᵢ = k·Fᵢ + b
             const x_pred = k*F[i] + intercept;
+            // 残差平方累加：(实测xᵢ - 预测x̂ᵢ)²
             S += (x_mean[i] - x_pred)**2;
         }
+
+        // sₓ：拟合的标准偏差（剩余标准差）
+        // 自由度 n-2：直线拟合有k、b两个待求参数
         const s_x = Math.sqrt(S/(n-2));
+        // F的平均值
         const meanF = sumF/n;
+        // Σ(Fᵢ - F̄)² 自变量F离均差平方和
         let sumF_dev2 = 0;
         F.forEach(f => sumF_dev2 += (f - meanF)**2);
-        const u_k = s_x / Math.sqrt(sumF_dev2);
-   
+        // 斜率k的A类标准不确定度 uA(k)
+        const uA_k = s_x / Math.sqrt(sumF_dev2);   
+        
+        // ========== 2. 【新增】相关系数 r ==========
+        let sum_xF = 0, sum_x = 0, sum_F = 0, sum_x2 = 0, sum_F2 = 0;
+        for(let i = 0; i < n; i++){
+            sum_xF += x_mean[i] * F[i];
+            sum_x += x_mean[i];
+            sum_F += F[i];
+            sum_x2 += x_mean[i] ** 2;
+            sum_F2 += F[i] ** 2;
+        }
+        const x_bar = sum_x / n;
+        const F_bar = sum_F / n;
+        const xF_bar = sum_xF / n;
+        const x2_bar = sum_x2 / n;
+        const F2_bar = sum_F2 / n;
+        const numerator = xF_bar - x_bar * F_bar;
+        const denominator = Math.sqrt( (F2_bar - F_bar**2) * (x2_bar - x_bar**2) );
+        const r = numerator / denominator;
+        // 可选：用r验算uA_k，用来核对计算是否出错
+        const uA_k_from_r = k * Math.sqrt( (1/(r**2)-1)/(n-2) );
+
+        // ========== 3.【新增】斜率B类不确定度 + 总合成u(k) （图片公式） ==========
+        const delta_x = 0.1;                     // 位移仪器误差限 0.1 mm（讲义取值）
+        const uB_x = delta_x / Math.sqrt(3);
+        const uB_k = uB_x / Math.sqrt(sumF_dev2);
+        const u_k = Math.sqrt(uA_k**2 + uB_k**2); // 斜率总标准不确定度 u(k)
+        
         // 杨氏模量计算
         const E_nmm2 = (8 * L * H) / (pi * d**2 * D * k);
         const E_gpa = E_nmm2 / 1000;
@@ -605,23 +650,24 @@ function calculate() {
         const ur_D = u_D / D;
 
         // 杨氏模量相对不确定度 + 合成不确定度
-       
         const ur_d = u_d / d;
         const ur_k = u_k / k;
         const ur_E = Math.sqrt(ur_L**2 + ur_H**2 + ur_D**2 + (2*ur_d)**2 + ur_k**2);
         const u_E = E_gpa * ur_E;
         const u_E_nmm2 = E_nmm2 * ur_E;
+        const u_E_Pa = E_Pa * ur_E;    //讲义所用N/m²单位的标准不确定度
 
         // 扩展不确定度 k=2
         const U_E = (2 * u_E).toFixed(2);
         const U_E_nmm2 = (2 * u_E_nmm2).toFixed(2);
 
+        // =====================【重点修改：输出字符串补充讲义全部参数】=====================
         let res = `
 -----（一）基础几何参数模块-------
 
 ✅ 金属丝原长 L：${L.toFixed(1)} mm
 ✅ 镜尺距 H：${H.toFixed(1)} mm
-✅ 光杠杆常数 D：${D.toFixed(2)} mm
+✅ 光杠杆 D：${D.toFixed(2)} mm
 ✅ 直径零点读数 d0：${d0.toFixed(3)} mm
 ✅ 直径测量平均值：${d_raw.toFixed(3)} mm
 ✅ 修正后直径 d：${d.toFixed(3)} mm
@@ -632,19 +678,23 @@ function calculate() {
 📏 直径B类不确定度 uB(d)：${uB_d.toFixed(4)} mm
 📏 直径合成不确定度 u(d)：${u_d.toFixed(4)} mm
 
------（三）拟合参数模块-------------
+-----（三）线性拟合与斜率不确定度模块（匹配讲义）-------------
 
+📊 相关系数 r：${r.toFixed(6)}
 ✅ 最小二乘法斜率 k：${k.toFixed(6)} mm/N
-✅ 斜率不确定度 u(k)：${u_k.toFixed(6)} mm/N
+📏 斜率A类不确定度 uA(k)：${uA_k.toFixed(6)} mm/N
+📏 斜率B类不确定度 uB(k)：${uB_k.toFixed(6)} mm/N
+📏 斜率合成总不确定度 u(k)：${u_k.toFixed(6)} mm/N
 
 -----（四）杨氏模量与不确定度模块----
 
 ✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm²  = ${sciStr} N/m²
+✅ E相对不确定度 ur(E)：${(ur_E*100).toFixed(3)} %
 ✅ 合成标准不确定度 u(E)：${u_E.toFixed(2)} GPa
 
 -----（五）最终结果模块------------
 
-🎯 最终实验结果：
+🎯 最终实验结果（包含因子k=2）：
    E = （${E_gpa.toFixed(2)} ± ${U_E}） GPa
    E = （${E_nmm2.toFixed(2)} ± ${U_E_nmm2}） N/mm²
         `;
