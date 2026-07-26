@@ -707,7 +707,7 @@ function calculate() {
 ✅ 直径测量平均值：${d_raw.toFixed(3)} mm
 ✅ 修正后直径 d：${d.toFixed(3)} mm
 
------（二）直径不确定度模块 ----------------------
+--------（二）各直接量的标准不确定度模块 -----------
 
 （1）直径d：
 📏 直径A类不确定度 uA(d)：${uA_d.toFixed(4)} mm
@@ -726,21 +726,21 @@ function calculate() {
 📏 光杠杆常数B类不确定度 uB(D)：${uB_D.toFixed(2)} mm
 📏 光杠杆常数合成不确定度 u(D)：${u_D.toFixed(2)} mm
 
------（三）线性拟合与斜率不确定度模块 -------------
+-------（三）线性拟合与斜率的标准不确定度 -----------
 
 📊 相关系数 r：${r.toFixed(6)}
 ✅ 最小二乘法斜率 k：${k.toFixed(6)} mm/N
-📏 斜率A类不确定度 uA(k)：${uA_k.toFixed(6)} mm/N
-📏 斜率B类不确定度 uB(k)：${uB_k.toFixed(6)} mm/N
-📏 斜率合成总不确定度 u(k)：${u_k.toFixed(6)} mm/N
+📏 斜率A类不确定度 uA(k)：${uA_k.toFixed(4)} mm/N   
+📏 斜率B类不确定度 uB(k)：${uB_k.toFixed(4)} mm/N
+📏 斜率合成总不确定度 u(k)：${u_k.toFixed(4)} mm/N
 
------（四）杨氏模量与不确定度模块 -----------------
+---------（四）杨氏模量及其标准不确定度 -------------
 
 ✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm²  = ${sciStr} N/m²
 ✅ E相对不确定度 ur(E)：${(ur_E*100).toFixed(3)} %
 ✅ 合成标准不确定度 u(E)：${u_E_nmm2.toFixed(2)} N/mm²  = ${uE_sciStr} N/m² 
 
------（五）最终结果模块 --------------------------
+-------------（五）最终结果模块 -------------------
 
 🎯 最终实验结果（标准不确定度表示）：
    E = ${compactResultStr} N/m²
