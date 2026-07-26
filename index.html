@@ -499,6 +499,25 @@ function calculate() {
     function formatSci(num, precision=2){
         return num.toExponential(precision).replace('e+','×10^');
     }
+    //【新增强制统一输出 10^11 格式化函数，只修改输出文本，数值不变】
+    function formatTo10Pow11(num, precision=3){
+        const val = num / 1e11;
+        return val.toFixed(precision) + "×10^11";
+    }
+    //【新增：紧凑标准形式 1.980(18)×10^11 输出函数】
+    function formatCompactResult(E_val, uE_val){
+        // E_val, uE_val 单位：N/m²
+        const base = 1e11;
+        const e_scaled = E_val / base;
+        const u_scaled = uE_val / base;
+        // 保留3位小数
+        const e_str = e_scaled.toFixed(3);
+        // 不确定度对应小数部分两位数字
+        const u_digits = Math.round(u_scaled * 1000);
+        // 直接取后两位，不再除以10
+        return `${e_str}(${u_digits})×10^11`;
+    }
+
 
     document.getElementById('result').innerText = "";
     const canvas = document.getElementById('chart');
@@ -627,7 +646,8 @@ function calculate() {
         
         // =========【修复核心：独立预处理科学计数字符串】=========
         const E_Pa = E_nmm2 * 1e6;
-        const sciStr = formatSci(E_Pa,2);
+        // 统一使用 10^11 格式输出
+        const sciStr = formatTo10Pow11(E_Pa,3);
         // =======================================================
 
         // ========== 4.【新增】计算各直接量的标准不确定度 ==========
@@ -662,16 +682,21 @@ function calculate() {
         const ur_d = u_d / d;
         const ur_k = u_k / k;
         const ur_E = Math.sqrt(ur_L**2 + ur_H**2 + ur_D**2 + (2*ur_d)**2 + ur_k**2);
-        const u_E = E_gpa * ur_E;
         const u_E_nmm2 = E_nmm2 * ur_E;
-        const u_E_Pa = E_Pa * ur_E;    //讲义所用N/m²单位的标准不确定度
+        const u_E_Pa = u_E_nmm2 * 1e6;    //单位换算：N/mm² → N/m²
+        const u_E_gpa = E_gpa * ur_E;
 
         // 扩展不确定度 k=2
-        const U_E = (2 * u_E).toFixed(2);
+        const U_E = (2 * u_E_gpa).toFixed(2);
         const U_E_nmm2 = (2 * u_E_nmm2).toFixed(2);
-        const U_E_Pa = formatSci(2 * u_E_Pa,2);
+        // 全部统一10^11
+        const U_E_Pa = formatTo10Pow11(2 * u_E_Pa,3);
+        const uE_sciStr = formatTo10Pow11(u_E_Pa,3);
 
-        // =====================【重点修改：输出字符串补充讲义全部参数、新增N/m²扩展不确定度结果】=====================
+        // 紧凑标准结果字符串
+        const compactResultStr = formatCompactResult(E_Pa, u_E_Pa);
+
+        // =====================【重点修改：输出字符串补充讲义全部参数、最终模块只保留单行紧凑表达式】=====================
         let res = `
 -----（一）基础几何参数模块 ----------------------
 
@@ -713,14 +738,12 @@ function calculate() {
 
 ✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm²  = ${sciStr} N/m²
 ✅ E相对不确定度 ur(E)：${(ur_E*100).toFixed(3)} %
-✅ 合成标准不确定度 u(E)：${u_E_nmm2.toFixed(2)} N/mm² 
+✅ 合成标准不确定度 u(E)：${u_E_nmm2.toFixed(2)} N/mm²  = ${uE_sciStr} N/m² 
 
 -----（五）最终结果模块 --------------------------
 
-🎯 最终实验结果（包含因子k=2）：
-   E = （${E_gpa.toFixed(2)} ± ${U_E}） GPa
-   E = （${E_nmm2.toFixed(2)} ± ${U_E_nmm2}） N/mm²
-   E = （${sciStr} ± ${U_E_Pa}） N/m²
+🎯 最终实验结果（标准不确定度表示）：
+   E = ${compactResultStr} N/m²
         `;
         document.getElementById('result').innerText = res;
           
@@ -1075,7 +1098,7 @@ const questionBank = [
     function copyQuestion(text) {
         navigator.clipboard.writeText(text).then(() => {
             alert("题目已复制到剪贴板！");
-        });
+        }); 
     }
 
     function getRandomQuestions() {
@@ -1097,5 +1120,3 @@ const questionBank = [
 </script>
 </body>
 </html>
-
-
