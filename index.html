@@ -618,10 +618,11 @@ function calculate() {
         const delta_x = 0.1;                     // 位移仪器误差限 0.1 mm（讲义取值）
         const uB_x = delta_x / Math.sqrt(3);
         const uB_k = uB_x / Math.sqrt(sumF_dev2);
-        const u_k = Math.sqrt(uA_k**2 + uB_k**2); // 斜率总标准不确定度 u(k)
+        // 斜率总标准不确定度 u(k)
+        const u_k = Math.sqrt(uA_k**2 + uB_k**2); 
         
         // 杨氏模量计算
-        const E_nmm2 = (8 * L * H) / (pi * d**2 * D * k);
+        const E_nmm2 = (8 * L * H) / (pi * d**2 * D * k);    
         const E_gpa = E_nmm2 / 1000;
         
         // =========【修复核心：独立预处理科学计数字符串】=========
@@ -712,7 +713,7 @@ function calculate() {
 
 ✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm²  = ${sciStr} N/m²
 ✅ E相对不确定度 ur(E)：${(ur_E*100).toFixed(3)} %
-✅ 合成标准不确定度 u(E)：${u_E.toFixed(2)} GPa   
+✅ 合成标准不确定度 u(E)：${u_E_nmm2.toFixed(2)} N/mm²   
 
 -----（五）最终结果模块 --------------------------
 
