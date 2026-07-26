@@ -551,11 +551,11 @@ function calculate() {
         }
 
         // 遍历add数组，i为数组下标；对每一组，取同侧加、减载荷形变量的平均值，得到平均伸长量x_mean
-        // 物理意义：加载、卸载同一砝码得到两个形变，取平均抵消迟滞误差，得到更准确的伸长量
+        // 物理意义：加载、卸载同一砝码得到两个形变，取平均抵消迟滞误差，得到更准确的伸长量 
         const x_mean = add.map((_,i) => (add[i]+sub[i])/2);
         // 每个质量mi乘以重力加速度g，得到对应拉力F=mg，构造拉力数组
         const F = m.map(mi => mi * g);
-
+ 
         //获得数据点总组数n
         const n = F.length;
         // 初始化最小二乘需要的4个累加变量：拉力总和、形变总和、F*x乘积总和、F平方总和
@@ -629,20 +629,24 @@ function calculate() {
         const sciStr = formatSci(E_Pa,2);
         // =======================================================
 
+        // ========== 4.【新增】计算各直接量的标准不确定度 ==========
 
-        //L、H、D：单次测量，A类不确定度 = 0
-        const uA_L = 0;
-        const uA_H = 0;
-        const uA_D = 0;
-
-        //B类不确定度
-        const delta_LH = 0.5;
-        const uB_L = delta_LH / Math.sqrt(3);
-        const uB_H = delta_LH / Math.sqrt(3);
-
-        const delta_D = 0.02;
-        const uB_D = delta_D / Math.sqrt(3);
-
+        //（1）L：
+        //金属丝原长L：A类不确定度
+        const uA_L = 0.45 / Math.sqrt(1);
+        //金属丝原长L：B类不确定度
+        const uB_L = 0.8 / Math.sqrt(3);
+        //（2）H：
+        //镜尺距离H：A类不确定度
+        const uA_H = 0.31 / Math.sqrt(1);
+        //镜尺距离H：B类不确定度
+        const uB_H = 0.8 / Math.sqrt(3);
+        //（2）D：
+        //光杠杆常数D：A类不确定度
+        const uA_D = 0.14 / Math.sqrt(1);
+        //光杠杆常数D：B类不确定度
+        const uB_D = 0.02 / Math.sqrt(3);
+        
         //合成不确定度 u = √(uA²+uB²)
         const u_L = Math.sqrt(uA_L**2 + uB_L**2);
         const u_H = Math.sqrt(uA_H**2 + uB_H**2);
@@ -679,9 +683,22 @@ function calculate() {
 
 -----（二）直径不确定度模块 ----------------------
 
+（1）直径d：
 📏 直径A类不确定度 uA(d)：${uA_d.toFixed(4)} mm
 📏 直径B类不确定度 uB(d)：${uB_d.toFixed(4)} mm
 📏 直径合成不确定度 u(d)：${u_d.toFixed(4)} mm
+（2）金属丝原长L：
+📏 金属丝原长A类不确定度 uA(L)：${uA_L.toFixed(2)} mm
+📏 金属丝原长B类不确定度 uB(L)：${uB_L.toFixed(2)} mm
+📏 金属丝原长合成不确定度 u(L)：${u_L.toFixed(2)} mm
+（3）镜尺距离H：
+📏 镜尺距A类不确定度 uA(H)：${uA_H.toFixed(2)} mm
+📏 镜尺距B类不确定度 uB(H)：${uB_H.toFixed(2)} mm
+📏 镜尺距合成不确定度 u(H)：${u_H.toFixed(2)} mm
+（4）光杠杆常数D：
+📏 光杠杆常数A类不确定度 uA(D)：${uA_D.toFixed(2)} mm
+📏 光杠杆常数B类不确定度 uB(D)：${uB_D.toFixed(2)} mm
+📏 光杠杆常数合成不确定度 u(D)：${u_D.toFixed(2)} mm
 
 -----（三）线性拟合与斜率不确定度模块 -------------
 
