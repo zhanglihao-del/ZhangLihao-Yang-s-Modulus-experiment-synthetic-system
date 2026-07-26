@@ -616,8 +616,8 @@ function calculate() {
 
         // ========== 3.【新增】斜率B类不确定度 + 总合成u(k) （图片公式） ==========
         const delta_x = 0.1;                     // 位移仪器误差限 0.1 mm（讲义取值）
-        const uB_x = delta_x / Math.sqrt(3);
-        const uB_k = uB_x / Math.sqrt(sumF_dev2);
+        const uB_x = delta_x / Math.sqrt(3); 
+        const uB_k = uB_x / Math.sqrt(sumF_dev2); 
         // 斜率总标准不确定度 u(k)
         const u_k = Math.sqrt(uA_k**2 + uB_k**2); 
         
@@ -627,7 +627,7 @@ function calculate() {
         
         // =========【修复核心：独立预处理科学计数字符串】=========
         const E_Pa = E_nmm2 * 1e6;
-        const sciStr1 = formatSci(E_Pa,2);
+        const sciStr = formatSci(E_Pa,2);
         // =======================================================
 
         // ========== 4.【新增】计算各直接量的标准不确定度 ==========
@@ -711,7 +711,7 @@ function calculate() {
 
 -----（四）杨氏模量与不确定度模块 -----------------
 
-✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm²  = ${sciStr1} N/m²
+✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm²  = ${sciStr} N/m²
 ✅ E相对不确定度 ur(E)：${(ur_E*100).toFixed(3)} %
 ✅ 合成标准不确定度 u(E)：${u_E_nmm2.toFixed(2)} N/mm² 
 
@@ -723,6 +723,7 @@ function calculate() {
    E = （${sciStr} ± ${U_E_Pa}） N/m²
         `;
         document.getElementById('result').innerText = res;
+          
 
         // ====================== 绘图：坐标完全对齐 ======================
         const W = canvas.width;
@@ -1096,4 +1097,5 @@ const questionBank = [
 </script>
 </body>
 </html>
+
 
