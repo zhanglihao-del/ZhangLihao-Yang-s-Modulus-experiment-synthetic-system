@@ -627,7 +627,9 @@ function calculate() {
         
         // =========【修复核心：独立预处理科学计数字符串】=========
         const E_Pa = E_nmm2 * 1e6;
-        const sciStr = formatSci(E_Pa,2);
+        const sciStr1 = formatSci(E_Pa,2);
+        const u_E_nmm2‘ = u_E_nmm2 * 1e6;
+        const sciStr2 = formatSci(u_E_nmm2‘,2);
         // =======================================================
 
         // ========== 4.【新增】计算各直接量的标准不确定度 ==========
@@ -711,9 +713,9 @@ function calculate() {
 
 -----（四）杨氏模量与不确定度模块 -----------------
 
-✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm²  = ${sciStr} N/m²
+✅ 杨氏模量 E：${E_nmm2.toFixed(2)} N/mm²  = ${sciStr1} N/m²
 ✅ E相对不确定度 ur(E)：${(ur_E*100).toFixed(3)} %
-✅ 合成标准不确定度 u(E)：${u_E_nmm2.toFixed(2)} N/mm² 
+✅ 合成标准不确定度 u(E)：${u_E_nmm2‘.toFixed(2)} N/mm² = ${sciStr2} N/m²
 
 -----（五）最终结果模块 --------------------------
 
