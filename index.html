@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+            tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']], processEscapes: true },
             startup: { typeset: false },
             svg: { displayAlign: 'center' }
         };
@@ -447,7 +447,7 @@
     <canvas id="chart"></canvas>
 </div>
 
-<div class="footer-note">注：待测样品为65Mn弹簧钢，理论E = 196500~198600 N/mm^2</div>
+<div class="footer-note">注：待测样品为65Mn弹簧钢，理论E = 196500~198600 N/mm²</div>
     
 </div>
 
@@ -847,7 +847,7 @@ function calculate() {
 const API_KEY = "sk-929f977a6546471a90d935b7bc1d79a5";
 const MODEL = "qwen-turbo";
 
-const KNOWLEDGE = `
+const KNOWLEDGE = String.raw`
 # 杨氏模量实验完整教学讲义（匹配PPT：实验背景、实验目的、实验原理、实验仪器、实验内容、数据处理、实验拓展）
 ## 一、实验背景
 各类金属材料在工程构件、机械零件、建筑钢结构中大量使用，材料抵抗拉伸形变的性能直接决定构件安全与使用寿命。杨氏模量是表征固体材料刚性、仅由材质本身决定的核心力学参数，是材料力学、大学物理基础测量必做实验。
@@ -969,6 +969,35 @@ $$E=\frac{8LH}{\pi d^2 D k}$$
 5. 实验结束先卸载全部拉力，再收纳光杠杆、量具，清洁光学部件后存放。
 `;
 
+function renderMarkdownWithProtectedMath(source, target) {
+    const blockMath = [];
+    const inlineMath = [];
+    const addBlock = formula => {
+        const index = blockMath.push(formula) - 1;
+        return `\n<div data-ai-math-block="${index}"></div>\n`;
+    };
+    const addInline = formula => {
+        const index = inlineMath.push(formula) - 1;
+        return `<span data-ai-math-inline="${index}"></span>`;
+    };
+
+    let protectedText = source
+        .replace(/\$\$([\s\S]*?)\$\$/g, (_, formula) => addBlock(formula))
+        .replace(/\\\[([\s\S]*?)\\\]/g, (_, formula) => addBlock(formula))
+        .replace(/\\\(([^\n]*?)\\\)/g, (_, formula) => addInline(formula))
+        .replace(/\$([^$\n]+?)\$/g, (_, formula) => addInline(formula));
+
+    target.innerHTML = marked.parse(protectedText);
+    target.querySelectorAll('[data-ai-math-block]').forEach(node => {
+        const formula = blockMath[Number(node.dataset.aiMathBlock)] || '';
+        node.textContent = `$$\n${formula.trim()}\n$$`;
+    });
+    target.querySelectorAll('[data-ai-math-inline]').forEach(node => {
+        const formula = inlineMath[Number(node.dataset.aiMathInline)] || '';
+        node.textContent = `$${formula.trim()}$`;
+    });
+}
+
 async function ask() {
     const q = document.getElementById("q").value.trim();
     const ans = document.getElementById("ans");
@@ -1011,10 +1040,18 @@ ${q}
         const data = await res.json();
         const text = data.output.text;
         if (typeof marked !== 'undefined') {
-            ans.innerHTML = marked.parse(text);
+            if (typeof MathJax !== 'undefined' && MathJax.typesetClear) {
+                MathJax.typesetClear([ans]);
+            }
+            renderMarkdownWithProtectedMath(text, ans);
             // 延时等待DOM渲染完成再加载公式，彻底解决Math input error
             await new Promise(resolve => setTimeout(resolve, 80));
-            await MathJax.typesetPromise([ans]);
+            if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                if (MathJax.startup && MathJax.startup.promise) {
+                    await MathJax.startup.promise;
+                }
+                await MathJax.typesetPromise([ans]);
+            }
         } else {
             ans.innerHTML = text.replace(/\n/g, '<br>');
         }
