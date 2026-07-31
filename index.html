@@ -502,7 +502,7 @@ function calculate() {
     //【新增强制统一输出 10^11 格式化函数，只修改输出文本，数值不变】
     function formatTo10Pow11(num, precision=3){
         const val = num / 1e11;
-        return val.toFixed(precision) + "×10^11";
+        return val.toFixed(precision) + "×10¹¹";
     }
     //【新增：紧凑标准形式 1.980(18)×10^11 输出函数】
     function formatCompactResult(E_val, uE_val){
@@ -515,7 +515,7 @@ function calculate() {
         // 不确定度对应小数部分两位数字
         const u_digits = Math.round(u_scaled * 1000);
         // 直接取后两位，不再除以10
-        return `${e_str}(${u_digits})×10^11`;
+        return `${e_str}(${u_digits})×10¹¹`;
     }
 
 
